@@ -963,52 +963,6 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
 </footer>
 
 <script>
-/* ══════════════════════════════════════════════════════════════════════
-   PAYMENT CONFIG — Razorpay destinations for the 8 subscription tiers
-   ══════════════════════════════════════════════════════════════════════
-   EVERY VALUE BELOW IS AN INTENTIONALLY EMPTY PLACEHOLDER. Nothing here
-   has been guessed or invented. Fill them in from the real account.
-
-   Each tier supports two mutually exclusive shapes — use whichever the
-   final integration turns out to be. Fill in ONE per tier, not both:
-
-   1. url     — a direct Razorpay Subscription Link / Payment Page URL.
-                WHERE IT COMES FROM: Razorpay Dashboard →
-                Subscriptions → Subscription Links (or Payment Pages).
-                Copy the full public https:// link for that plan.
-                Works with no backend. If set, it wins.
-
-   2. planId  — a Razorpay plan ID, always of the form "plan_XXXXXXXXXXXX".
-                WHERE IT COMES FROM: Razorpay Dashboard →
-                Subscriptions → Plans → the plan's ID column;
-                or the API response from POST /v1/plans.
-                NOTE: a planId alone is NOT yet actionable from this page.
-                Creating a subscription from a plan requires a server-side
-                call (Netlify Function) that does not exist yet, plus the
-                public key id. Until that endpoint is built, a tier with
-                only a planId set stays on the #waitlist fallback — it is
-                published to the button as data-razorpay-plan-id so the
-                future handler can read it. Do NOT put a key_id in this
-                file; the key secret must never reach the browser.
-
-   FALLBACK CONTRACT: if a tier resolves to no usable destination, its
-   Subscribe Now button keeps href="#waitlist" — exactly today's
-   behaviour. There is no state in which a button becomes dead or "#".
-   ────────────────────────────────────────────────────────────────────── */
-const TIER_CHECKOUT = {
-  // ─── India · Desi Phool ───
-  in_monthly:      { url: '', planId: '' },  // ₹555/month
-  in_quarterly:    { url: '', planId: '' },  // ₹1,499 / 3 months
-  in_halfyearly:   { url: '', planId: '' },  // ₹2,799 / 6 months
-  in_annual:       { url: '', planId: '' },  // ₹4,999 / 12 months
-
-  // ─── International · Global Phool ───
-  intl_monthly:    { url: '', planId: '' },  // ₹1,100/month
-  intl_quarterly:  { url: '', planId: '' },  // ₹3,299 / 3 months
-  intl_halfyearly: { url: '', planId: '' },  // ₹5,999 / 6 months
-  intl_annual:     { url: '', planId: '' },  // ₹10,999 / 12 months
-};
-
 function toggleFaq(el) {
   const item = el.parentElement;
   const open = item.classList.contains('open');
@@ -1117,73 +1071,45 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 })();
 
 /* ============================================================
-   TIER SELECTION — .plan-block cards
+   TIER SELECTION UI — .plan-block cards
    Each card's tier list is an ARIA radiogroup with roving
    tabindex. Cards are wired independently, so selecting in one
-   never touches the other. The card's Subscribe Now button
-   retargets to the selected tier's configured destination, and
-   falls back to href="#waitlist" whenever none is configured.
+   never touches the other.
 
-   Entirely defensive: any missing element, unknown tier key or
-   empty config resolves to the waitlist fallback rather than
-   throwing. The whole block is wrapped so a failure here can
-   never take down the rest of the page.
+   SCOPE: this block owns SELECTION ONLY. It never reads payment
+   config and never writes an href. Button destinations are owned
+   solely by razorpay-checkout.js, which reads the aria-checked
+   state this block maintains. Keeping one writer per href avoids
+   a race between two scripts on a payment link.
+
+   The buttons' href="#waitlist" lives in the markup, so if every
+   script on the page fails the CTAs still behave as they do today.
 ============================================================ */
 (function () {
-  var FALLBACK_HREF = '#waitlist';
-
-  // Returns {href} | {planId} | null. Never throws, never returns '#'.
-  function resolveDestination(tierKey) {
-    var cfg = (typeof TIER_CHECKOUT === 'object' && TIER_CHECKOUT)
-      ? TIER_CHECKOUT[tierKey] : null;
-    if (!cfg || typeof cfg !== 'object') return null;
-
-    var url = typeof cfg.url === 'string' ? cfg.url.trim() : '';
-    // Only accept a real absolute URL — never a bare '#' or junk.
-    if (url && /^https?:\/\//i.test(url)) return { href: url, planId: '' };
-
-    var planId = typeof cfg.planId === 'string' ? cfg.planId.trim() : '';
-    if (planId) return { href: '', planId: planId };
-
-    return null;
-  }
-
   function initCard(card) {
     var group = card.querySelector('.tier-list[role="radiogroup"]');
+    if (!group) return;
+
+    // Optional: selection still works on a card with no button.
     var button = card.querySelector('.btn-po, .btn-pw');
-    if (!group || !button) return;
 
     var rows = Array.prototype.slice.call(
       group.querySelectorAll('.tier-row[role="radio"]')
     );
     if (!rows.length) return;
 
-    function applyDestination(row) {
-      var dest = row ? resolveDestination(row.getAttribute('data-tier')) : null;
-
-      if (dest && dest.href) {
-        button.setAttribute('href', dest.href);
-        button.removeAttribute('data-razorpay-plan-id');
-      } else {
-        // No usable destination (empty config, unknown tier, or planId
-        // awaiting its server endpoint) → today's behaviour, unchanged.
-        button.setAttribute('href', FALLBACK_HREF);
-        if (dest && dest.planId) {
-          button.setAttribute('data-razorpay-plan-id', dest.planId);
-        } else {
-          button.removeAttribute('data-razorpay-plan-id');
-        }
-      }
-
-      if (row) {
-        button.setAttribute('data-selected-tier', row.getAttribute('data-tier') || '');
-        var name = row.querySelector('.tier-name');
-        // Keep the button's accessible name in sync with the choice.
-        button.setAttribute(
-          'aria-label',
-          'Subscribe Now' + (name && name.textContent ? ' — ' + name.textContent.trim() : '')
-        );
-      }
+    /* Keeps the button's accessible name in step with the choice, so a
+       screen reader hears "Subscribe Now — A Year of Phool" rather than a
+       bare "Subscribe Now". Deliberately touches aria-label and a data
+       attribute ONLY — never href. razorpay-checkout.js owns destinations. */
+    function syncButtonLabel(row) {
+      if (!button || !row) return;
+      var name = row.querySelector('.tier-name');
+      button.setAttribute('data-selected-tier', row.getAttribute('data-tier') || '');
+      button.setAttribute(
+        'aria-label',
+        'Subscribe Now' + (name && name.textContent ? ' — ' + name.textContent.trim() : '')
+      );
     }
 
     function select(row, focusIt) {
@@ -1193,7 +1119,7 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
         r.setAttribute('aria-checked', on ? 'true' : 'false');
         r.setAttribute('tabindex', on ? '0' : '-1');
       });
-      applyDestination(row);
+      syncButtonLabel(row);
       if (focusIt) row.focus();
     }
 
@@ -1235,5 +1161,12 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   }
 })();
 </script>
+
+<!-- Razorpay checkout wiring — the SINGLE owner of every CTA href.
+     Must load after the tier-selection script above, which maintains the
+     aria-checked state this file reads. Config lives at the top of the
+     file (CHECKOUT_LINKS); with it empty, every button stays on the
+     markup default of #waitlist. -->
+<script src="/razorpay-checkout.js"></script>
 </body>
 </html>
