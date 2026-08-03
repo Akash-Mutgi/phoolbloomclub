@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to Phool Bloom Club ✿</title>
+<meta name="description" content="You're officially in. Your founding-member welcome and free wallpaper set await.">
+
+<!-- Favicons (same as homepage) -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,500;1,600;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --purple:       #6b4ba8;
+  --amber:        #f6a93a;
+  --yellow:       #f7ec8d;
+  --green:        #94b15e;
+  --green-dark:   #6a8a3e;
+  --cream:        #f5f4ed;
+  --dark:         #241820;
+  --purple-light: #ede5f8;
+  --purple-mid:   #b49dd4;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--cream);
+  color:var(--dark);
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;line-height:1.6;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+
+h1,h2{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;line-height:1.15}
+h1{font-size:clamp(2.4rem,5vw,4rem)}
+h2{font-size:clamp(1.4rem,2.6vw,2rem)}
+p{line-height:1.75}
+
+/* ──────── NAV ──────── */
+nav{
+  background:rgba(245,244,237,.96);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(107,75,168,.1);
+  padding:14px 32px;display:flex;align-items:center;justify-content:center;
+}
+.nav-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-mark{height:40px;width:auto;display:block}
+.nav-logo-text{
+  font-family:'Playfair Display',serif;font-size:1.1rem;
+  color:var(--dark);font-style:italic
+}
+
+/* ──────── HERO ──────── */
+main{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:64px 24px;
+}
+.hero{
+  max-width:640px;width:100%;text-align:center;
+}
+.pill{
+  display:inline-block;background:white;border:1.5px solid var(--purple-mid);
+  color:var(--purple);border-radius:100px;padding:6px 18px;
+  font-size:0.76rem;font-weight:600;letter-spacing:.08em;
+  margin-bottom:26px;
+}
+.pill .dot{
+  width:7px;height:7px;background:var(--green);border-radius:50%;
+  display:inline-block;margin-right:6px;vertical-align:middle;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+h1{color:var(--dark);margin-bottom:8px}
+h1 em{color:var(--purple)}
+.sub{
+  color:#5a4f6e;font-size:1.05rem;margin:0 auto 36px;max-width:480px;
+}
+.sub strong{color:var(--purple);font-weight:600}
+
+/* ──────── DOWNLOAD CARD ──────── */
+.card{
+  background:white;border-radius:20px;
+  padding:36px 28px;
+  border:1.5px solid rgba(107,75,168,.1);
+  box-shadow:0 8px 28px rgba(107,75,168,.08);
+  margin-bottom:28px;text-align:left;
+}
+.card-row{display:flex;align-items:center;gap:18px;margin-bottom:24px}
+.card-icon{
+  width:64px;height:64px;border-radius:14px;
+  background:var(--purple-light);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.card-icon svg{width:32px;height:32px}
+.card-row-text h2{font-size:1.25rem;color:var(--dark);margin-bottom:4px}
+.card-row-text p{font-size:.88rem;color:#7a7080;line-height:1.5}
+.card-list{
+  list-style:none;border-top:1px solid rgba(107,75,168,.1);padding-top:20px;
+  margin-bottom:24px;
+}
+.card-list li{
+  font-size:.88rem;color:#5a4f6e;
+  display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;
+}
+.card-list li::before{
+  content:'✦';color:var(--amber);font-size:.7rem;margin-top:5px;flex-shrink:0;
+}
+.btn-download{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;background:var(--amber);color:var(--dark);
+  text-decoration:none;border:none;padding:16px 24px;
+  border-radius:100px;font-weight:700;font-size:1rem;
+  font-family:'DM Sans',sans-serif;cursor:pointer;
+  transition:all .25s;
+}
+.btn-download:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(246,169,58,.4);
+}
+.btn-download svg{width:18px;height:18px}
+
+/* ──────── FINE PRINT ──────── */
+.fine-print{
+  font-size:.85rem;color:#7a7080;
+  background:rgba(180,157,212,.12);
+  border-radius:12px;padding:16px 20px;
+  margin-bottom:32px;
+}
+.fine-print strong{color:var(--purple);font-weight:600}
+
+/* ──────── BACK LINK ──────── */
+.back{
+  display:inline-block;color:var(--purple);
+  text-decoration:none;font-size:.9rem;font-weight:500;
+  border-bottom:1px solid transparent;transition:border-color .2s;
+}
+.back:hover{border-color:var(--purple)}
+
+/* ──────── FOOTER ──────── */
+footer{
+  background:var(--dark);padding:32px 24px;text-align:center;
+}
+.footer-mark{height:36px;width:auto;display:block;margin:0 auto 10px}
+.footer-text{
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:1.1rem;color:white;margin-bottom:10px;
+}
+.footer-copy{color:rgba(255,255,255,.4);font-size:.78rem}
+
+@media(max-width:560px){
+  .card{padding:28px 20px}
+  .card-row{flex-direction:column;text-align:center;gap:14px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo-wrap">
+    <img class="nav-mark" src="/logo-nav.png" alt="Phool Bloom Club">
+    <span class="nav-logo-text">Phool Bloom Club</span>
+  </a>
+</nav>
+
+<main>
+  <div class="hero">
+    <div class="pill"><span class="dot"></span>YOU'RE OFFICIALLY IN</div>
+
+    <h1 id="greeting">Welcome to the<br><em>Phool Bloom Club.</em></h1>
+
+    <p class="sub" id="sub">
+      You're confirmed as a founding member — among the first thirty. Below is a small thank-you while we get everything ready for launch on <strong>15th June</strong>.
+    </p>
+
+    <div class="card">
+      <div class="card-row">
+        <div class="card-icon">
+          <svg viewBox="0 0 32 32" fill="none">
+            <rect x="4" y="2" width="18" height="28" rx="3" stroke="#6b4ba8" stroke-width="1.8"/>
+            <circle cx="13" cy="25" r="1.6" fill="#6b4ba8"/>
+            <path d="M9 5h8" stroke="#6b4ba8" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="22" cy="10" r="2.4" fill="#b49dd4"/>
+            <circle cx="22" cy="10" r="1" fill="#6a8a3e"/>
+          </svg>
+        </div>
+        <div class="card-row-text">
+          <h2>Your founding-edition wallpapers</h2>
+          <p>A small set of preview phone wallpapers — early designs from the founding-member series.</p>
+        </div>
+      </div>
+
+      <ul class="card-list">
+        <li>2 preview phone wallpapers (iPhone size, work on Android too)</li>
+        <li>A welcome note from Avnie</li>
+        <li>The complete 4-piece set arrives in your inbox within 48 hours</li>
+      </ul>
+
+      <a class="btn-download" href="/phool-wallpapers.zip" download>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 3v11m0 0l-4-4m4 4l4-4M3 17h14"/>
+        </svg>
+        Download my wallpapers
+      </a>
+    </div>
+
+    <div class="fine-print">
+      <strong>What happens next:</strong> Avnie is finishing the full 4-piece wallpaper set this week — one for each season's flower. The complete set will land in your inbox within 48 hours. Keep an eye out (and your spam folder too, just in case ✿).
+    </div>
+
+    <a href="/" class="back">← back to phoolbloomclub.com</a>
+  </div>
+</main>
+
+<footer>
+  <img class="footer-mark" src="/logo-footer.png" alt="">
+  <div class="footer-text">Phool Bloom Club</div>
+  <p class="footer-copy">© 2026 · Made with petals &amp; ink 🌸</p>
+</footer>
+
+<script>
+// Personalize greeting if Kit passed first_name in URL params
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const firstName = (params.get('first_name') || '').trim();
+  if (firstName && /^[a-zA-Z\u00C0-\u017F\s'-]{1,40}$/.test(firstName)) {
+    // Capitalise first letter only, in case Kit sends lowercase
+    const name = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    document.getElementById('greeting').innerHTML =
+      'Welcome, ' + name + '. <br><em>You\u2019re in.</em>';
+    document.getElementById('sub').innerHTML =
+      "You're confirmed as a founding member \u2014 among the first thirty. Below is a small thank-you while we get everything ready for launch on <strong>15th June</strong>.";
+  }
+})();
+</script>
+
+</body>
+</html>

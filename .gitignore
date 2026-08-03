@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+
+# Editor / backup files
+*.bak
+
+# Local Netlify folder
+.netlify/
+
+# Dependencies
+node_modules/
+
+# Large binary assets — kept out of git history.
+# NOTE: /phool-wallpapers.zip IS served live (linked from welcome/index.html)
+# but is deliberately not version-controlled. It must be present in the
+# publish directory at deploy time.
+phool-wallpapers*.zip
+phool-wallpapers/
+phool-wallpapers 2/

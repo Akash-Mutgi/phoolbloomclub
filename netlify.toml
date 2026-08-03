@@ -1,0 +1,19 @@
+# Netlify configuration — Phool Bloom Club
+
+[build]
+  # Static site — no build command needed
+  publish = "."
+  functions = "functions"
+
+# Pretty URL: /api/subscribe → /.netlify/functions/kit-subscribe
+[[redirects]]
+  from = "/api/subscribe"
+  to = "/.netlify/functions/kit-subscribe"
+  status = 200
+  force = true
+
+# Default 200 for the root
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
