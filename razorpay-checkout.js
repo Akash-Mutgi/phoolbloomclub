@@ -25,23 +25,25 @@
 
 const CHECKOUT_LINKS = {
 
-  // ---- FOUNDING MEMBER (the two "Reserve My Spot" buttons) ----
-  founding_india:         '',   // Desi Phool   Rs 399/month founding rate
-  founding_intl:          '',   // Global Phool $9/month founding rate
-                                // ^ CONFIRM CURRENCY FIRST. The site quotes
-                                //   this plan as both $9 and Rs 1,100.
+  // ---- FOUNDING MEMBER ----
+  // The founding cards were removed from the page, so these keys render
+  // nowhere. founding_india's link is parked and shared directly:
+  // sub_TLMnXtqnz4N0i5 -> https://rzp.io/rzp/syj63wr (Rs 399/month, 7 cycles).
+  // No founding_intl plan exists. Left empty deliberately.
+  founding_india:         '',
+  founding_intl:          '',
 
   // ---- DESI PHOOL / INDIA (the four tier rows) ----
-  desi_monthly:           '',   // Rs 555   / month
-  desi_seasonal:          '',   // Rs 1,499 / 3 months
-  desi_halfyear:          '',   // Rs 2,799 / 6 months
-  desi_year:              '',   // Rs 4,999 / 12 months
+  desi_monthly:           'https://rzp.io/rzp/StkkgonD',   // Rs 555   / month      sub_TLNHllsVJ60esp
+  desi_seasonal:          'https://rzp.io/rzp/5sZk9u7',    // Rs 1,499 / 3 months   sub_TLNHp3jndNkRgR
+  desi_halfyear:          'https://rzp.io/rzp/L2GEGUL',    // Rs 2,799 / 6 months   sub_TLNHs3Gzan2ebN
+  desi_year:              'https://rzp.io/rzp/Ggi4GcRU',   // Rs 4,999 / 12 months  sub_TLNHvBsmA6TsoX
 
   // ---- GLOBAL PHOOL / INTERNATIONAL (the four tier rows) ----
-  global_monthly:         '',   // Rs 1,100  / month
-  global_seasonal:        '',   // Rs 3,299  / 3 months
-  global_halfyear:        '',   // Rs 5,999  / 6 months
-  global_year:            '',   // Rs 10,999 / 12 months
+  global_monthly:         'https://rzp.io/rzp/hclCELfq',   // Rs 1,100  / month     sub_TLNHyG1GJGbW8v
+  global_seasonal:        'https://rzp.io/rzp/6wBrkxMU',   // Rs 3,299  / 3 months  sub_TLNI23fHVjKDgn
+  global_halfyear:        'https://rzp.io/rzp/WscnVqzV',   // Rs 5,299  / 6 months  sub_TLNI53lCcDnhX5
+  global_year:            'https://rzp.io/rzp/LXUsxQk',    // Rs 10,999 / 12 months sub_TLNI854uGuGI84
 };
 
 
@@ -79,7 +81,10 @@ const BLOCKED_PLAN_IDS = [
 (function () {
   'use strict';
 
-  var WAITLIST = '#waitlist';
+  // Fallback destination for any tier with no usable link. The waitlist
+  // section no longer exists; #pricing is the live plans section, so an
+  // unconfigured button scrolls there rather than at a dead anchor.
+  var WAITLIST = '#pricing';
 
   var TAG = '[razorpay-checkout]';
 
