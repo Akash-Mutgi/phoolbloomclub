@@ -33,17 +33,43 @@ const CHECKOUT_LINKS = {
   founding_india:         '',
   founding_intl:          '',
 
+  // ---- CHECKOUT DELIBERATELY CLOSED ----------------------------------
+  // All eight values are emptied on purpose, so every tier button falls
+  // back to #pricing and no new subscription can start through these
+  // links. This is NOT an unfinished config.
+  //
+  // WHY: the rzp.io hosted subscription page cannot collect a postal
+  // address, and this is a mail business — subscribers arriving this way
+  // could not be shipped to. Those links also carried a total_count that
+  // ends the subscription after 12 months.
+  //
+  // The links below still exist and still work for anyone already
+  // holding one. They are kept here only so they can be restored or
+  // cancelled deliberately, NOT to be pasted back in:
+  //   desi_monthly    https://rzp.io/rzp/StkkgonD   sub_TLNHllsVJ60esp
+  //   desi_seasonal   https://rzp.io/rzp/5sZk9u7    sub_TLNHp3jndNkRgR
+  //   desi_halfyear   https://rzp.io/rzp/L2GEGUL    sub_TLNHs3Gzan2ebN
+  //   desi_year       https://rzp.io/rzp/Ggi4GcRU   sub_TLNHvBsmA6TsoX
+  //   global_monthly  https://rzp.io/rzp/hclCELfq   sub_TLNHyG1GJGbW8v
+  //   global_seasonal https://rzp.io/rzp/6wBrkxMU   sub_TLNI23fHVjKDgn
+  //   global_halfyear https://rzp.io/rzp/WscnVqzV   sub_TLNI53lCcDnhX5
+  //   global_year     https://rzp.io/rzp/LXUsxQk    sub_TLNI854uGuGI84
+  //
+  // NEXT: replaced by /checkout/desi/ and /checkout/global/, which collect
+  // the address before payment and create the subscription server-side.
+  // --------------------------------------------------------------------
+
   // ---- DESI PHOOL / INDIA (the four tier rows) ----
-  desi_monthly:           'https://rzp.io/rzp/StkkgonD',   // Rs 555   / month      sub_TLNHllsVJ60esp
-  desi_seasonal:          'https://rzp.io/rzp/5sZk9u7',    // Rs 1,499 / 3 months   sub_TLNHp3jndNkRgR
-  desi_halfyear:          'https://rzp.io/rzp/L2GEGUL',    // Rs 2,799 / 6 months   sub_TLNHs3Gzan2ebN
-  desi_year:              'https://rzp.io/rzp/Ggi4GcRU',   // Rs 4,999 / 12 months  sub_TLNHvBsmA6TsoX
+  desi_monthly:           '',   // Rs 555   / month
+  desi_seasonal:          '',   // Rs 1,499 / 3 months
+  desi_halfyear:          '',   // Rs 2,799 / 6 months
+  desi_year:              '',   // Rs 4,999 / 12 months
 
   // ---- GLOBAL PHOOL / INTERNATIONAL (the four tier rows) ----
-  global_monthly:         'https://rzp.io/rzp/hclCELfq',   // Rs 1,100  / month     sub_TLNHyG1GJGbW8v
-  global_seasonal:        'https://rzp.io/rzp/6wBrkxMU',   // Rs 3,299  / 3 months  sub_TLNI23fHVjKDgn
-  global_halfyear:        'https://rzp.io/rzp/WscnVqzV',   // Rs 5,299  / 6 months  sub_TLNI53lCcDnhX5
-  global_year:            'https://rzp.io/rzp/LXUsxQk',    // Rs 10,999 / 12 months sub_TLNI854uGuGI84
+  global_monthly:         '',   // Rs 1,100  / month
+  global_seasonal:        '',   // Rs 3,299  / 3 months
+  global_halfyear:        '',   // Rs 5,299  / 6 months
+  global_year:            '',   // Rs 10,999 / 12 months
 };
 
 

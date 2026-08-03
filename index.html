@@ -300,7 +300,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,244,237,
 .plan-block.featured .tier-price{color:var(--yellow)}
 .tier-save{display:block;font-size:.72rem;color:#9a9099;margin-top:2px;font-family:'DM Sans',sans-serif}
 .plan-block.featured .tier-save{color:rgba(255,255,255,.55)}
-.plan-block .btn-po,.plan-block .btn-pw{margin-top:24px}
+.plan-block .btn-po,.plan-block .btn-pw{margin-top:14px}
+/* Temporary: shown while checkout is closed. Remove together with the
+   .plan-notice markup once the new checkout flow is live. */
+.plan-notice{margin-top:22px;padding:12px 14px;border-radius:12px;background:var(--purple-pale);border:1px solid rgba(107,75,168,.18);font-family:'DM Sans',sans-serif;font-size:.8rem;line-height:1.5;color:#5a4f6e}
+.plan-notice strong{display:block;color:var(--purple);font-weight:600;margin-bottom:2px}
+.plan-block.featured .plan-notice{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);color:rgba(255,255,255,.78)}
+.plan-block.featured .plan-notice strong{color:var(--yellow)}
 .plans-include{max-width:680px;margin:36px auto 0;text-align:center}
 .plans-include-title{font-family:'Playfair Display',serif;font-style:normal;font-size:1.05rem;color:var(--purple);margin-bottom:14px}
 .plans-include-list{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;padding:0}
@@ -642,6 +648,8 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
             <span class="tier-meta"><span class="tier-price">₹4,999</span><span class="tier-save">for 12 months · Save ₹1,661</span></span>
           </div>
         </div>
+        <!-- TEMPORARY: remove with .plan-notice CSS when checkout reopens -->
+        <p class="plan-notice"><strong>Checkout reopening shortly</strong>We're moving to a checkout that collects your delivery address, so your envelope reaches you. Back very soon — thank you for your patience.</p>
         <a href="#pricing" class="btn-po">Subscribe Now</a>
       </div>
       <div class="plan-block featured reveal">
@@ -674,6 +682,8 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
             <span class="tier-meta"><span class="tier-price">₹10,999</span><span class="tier-save">for 12 months · Save ₹2,201</span></span>
           </div>
         </div>
+        <!-- TEMPORARY: remove with .plan-notice CSS when checkout reopens -->
+        <p class="plan-notice"><strong>Checkout reopening shortly</strong>We're moving to a checkout that collects your delivery address, so your envelope reaches you. Back very soon — thank you for your patience.</p>
         <a href="#pricing" class="btn-pw">Subscribe Now</a>
       </div>
     </div>
