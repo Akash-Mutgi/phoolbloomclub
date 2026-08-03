@@ -331,9 +331,30 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,244,237,
 .plan-block.featured .plan-region{color:rgba(255,255,255,.55)}
 .plan-head h3{color:var(--dark);margin:0}
 .plan-block.featured .plan-head h3{color:white}
-.tier-row{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid rgba(107,75,168,.1)}
+/* ── Selectable tier rows (ARIA radiogroup) ──────────────────────────
+   Rows are real radio options. Selection is signalled three ways so it
+   never depends on colour alone: the marker changes shape (ring → filled),
+   the tier name changes weight, and aria-checked changes for AT. */
+.tier-list{display:flex;flex-direction:column;margin:0 -10px}
+.tier-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 10px;border-bottom:1px solid rgba(107,75,168,.1);border-radius:12px;cursor:pointer;transition:background .2s;min-height:44px;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 .plan-block.featured .tier-row{border-bottom-color:rgba(255,255,255,.15)}
 .tier-row:last-of-type{border-bottom:none}
+.tier-row:hover{background:rgba(107,75,168,.06)}
+.plan-block.featured .tier-row:hover{background:rgba(255,255,255,.08)}
+.tier-row:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.plan-block.featured .tier-row:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+/* Cue 1 — marker shape */
+.tier-dot{flex:0 0 auto;width:18px;height:18px;border-radius:50%;border:2px solid var(--purple-mid);position:relative;transition:border-color .2s}
+.plan-block.featured .tier-dot{border-color:rgba(255,255,255,.5)}
+.tier-row[aria-checked="true"] .tier-dot{border-color:var(--purple)}
+.tier-row[aria-checked="true"] .tier-dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--purple)}
+.plan-block.featured .tier-row[aria-checked="true"] .tier-dot{border-color:var(--yellow)}
+.plan-block.featured .tier-row[aria-checked="true"] .tier-dot::after{background:var(--yellow)}
+/* Cue 2 — weight. Cue 3 — background tint (supporting, never the only signal) */
+.tier-row[aria-checked="true"] .tier-name{font-weight:700}
+.tier-row[aria-checked="true"]{background:var(--purple-pale)}
+.plan-block.featured .tier-row[aria-checked="true"]{background:rgba(255,255,255,.12)}
+@media(prefers-reduced-motion:reduce){.tier-row,.tier-dot{transition:none}}
 .tier-name{font-family:'Playfair Display',serif;font-style:normal;font-size:1rem;color:var(--dark)}
 .plan-block.featured .tier-name{color:white}
 .tier-meta{text-align:right;margin-left:auto;flex-shrink:0}
@@ -442,6 +463,8 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
 @media(max-width:600px){
   .nav-links{display:none}
   .steps-grid{grid-template-columns:1fr}
+  /* Comfortable tap targets on touch screens (min 44px is enforced above) */
+  .tier-row{min-height:48px;padding:12px 10px}
 }
 </style>
 </head>
@@ -730,21 +753,27 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
             <h3>Desi Phool</h3>
           </div>
         </div>
-        <div class="tier-row">
-          <span class="tier-name">Monthly Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹555/month</span><span class="tier-save">Cancel anytime</span></span>
-        </div>
-        <div class="tier-row">
-          <span class="tier-name">Seasonal Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹1,499</span><span class="tier-save">for 3 months · Save ₹166</span></span>
-        </div>
-        <div class="tier-row">
-          <span class="tier-name">Half a Year of Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹2,799</span><span class="tier-save">for 6 months · Save ₹531</span></span>
-        </div>
-        <div class="tier-row">
-          <span class="tier-name">A Year of Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹4,999</span><span class="tier-save">for 12 months · Save ₹1,661</span></span>
+        <div class="tier-list" role="radiogroup" aria-label="Choose your Desi Phool plan length">
+          <div class="tier-row" role="radio" aria-checked="true" tabindex="0" data-tier="in_monthly">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">Monthly Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹555/month</span><span class="tier-save">Cancel anytime</span></span>
+          </div>
+          <div class="tier-row" role="radio" aria-checked="false" tabindex="-1" data-tier="in_quarterly">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">Seasonal Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹1,499</span><span class="tier-save">for 3 months · Save ₹166</span></span>
+          </div>
+          <div class="tier-row" role="radio" aria-checked="false" tabindex="-1" data-tier="in_halfyearly">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">Half a Year of Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹2,799</span><span class="tier-save">for 6 months · Save ₹531</span></span>
+          </div>
+          <div class="tier-row" role="radio" aria-checked="false" tabindex="-1" data-tier="in_annual">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">A Year of Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹4,999</span><span class="tier-save">for 12 months · Save ₹1,661</span></span>
+          </div>
         </div>
         <a href="#waitlist" class="btn-po">Subscribe Now</a>
       </div>
@@ -756,21 +785,27 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
             <h3>Global Phool</h3>
           </div>
         </div>
-        <div class="tier-row">
-          <span class="tier-name">Monthly Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹1,100/month</span><span class="tier-save">Cancel anytime</span></span>
-        </div>
-        <div class="tier-row">
-          <span class="tier-name">Seasonal Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹3,299</span><span class="tier-save">for 3 months · Save ₹1,000</span></span>
-        </div>
-        <div class="tier-row">
-          <span class="tier-name">Half a Year of Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹5,999</span><span class="tier-save">for 6 months · Save ₹1,200</span></span>
-        </div>
-        <div class="tier-row">
-          <span class="tier-name">A Year of Phool</span>
-          <span class="tier-meta"><span class="tier-price">₹10,999</span><span class="tier-save">for 12 months · Save ₹2,200</span></span>
+        <div class="tier-list" role="radiogroup" aria-label="Choose your Global Phool plan length">
+          <div class="tier-row" role="radio" aria-checked="true" tabindex="0" data-tier="intl_monthly">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">Monthly Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹1,100/month</span><span class="tier-save">Cancel anytime</span></span>
+          </div>
+          <div class="tier-row" role="radio" aria-checked="false" tabindex="-1" data-tier="intl_quarterly">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">Seasonal Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹3,299</span><span class="tier-save">for 3 months · Save ₹1,000</span></span>
+          </div>
+          <div class="tier-row" role="radio" aria-checked="false" tabindex="-1" data-tier="intl_halfyearly">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">Half a Year of Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹5,999</span><span class="tier-save">for 6 months · Save ₹1,200</span></span>
+          </div>
+          <div class="tier-row" role="radio" aria-checked="false" tabindex="-1" data-tier="intl_annual">
+            <span class="tier-dot" aria-hidden="true"></span>
+            <span class="tier-name">A Year of Phool</span>
+            <span class="tier-meta"><span class="tier-price">₹10,999</span><span class="tier-save">for 12 months · Save ₹2,200</span></span>
+          </div>
         </div>
         <a href="#waitlist" class="btn-pw">Subscribe Now</a>
       </div>
@@ -928,6 +963,52 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
 </footer>
 
 <script>
+/* ══════════════════════════════════════════════════════════════════════
+   PAYMENT CONFIG — Razorpay destinations for the 8 subscription tiers
+   ══════════════════════════════════════════════════════════════════════
+   EVERY VALUE BELOW IS AN INTENTIONALLY EMPTY PLACEHOLDER. Nothing here
+   has been guessed or invented. Fill them in from the real account.
+
+   Each tier supports two mutually exclusive shapes — use whichever the
+   final integration turns out to be. Fill in ONE per tier, not both:
+
+   1. url     — a direct Razorpay Subscription Link / Payment Page URL.
+                WHERE IT COMES FROM: Razorpay Dashboard →
+                Subscriptions → Subscription Links (or Payment Pages).
+                Copy the full public https:// link for that plan.
+                Works with no backend. If set, it wins.
+
+   2. planId  — a Razorpay plan ID, always of the form "plan_XXXXXXXXXXXX".
+                WHERE IT COMES FROM: Razorpay Dashboard →
+                Subscriptions → Plans → the plan's ID column;
+                or the API response from POST /v1/plans.
+                NOTE: a planId alone is NOT yet actionable from this page.
+                Creating a subscription from a plan requires a server-side
+                call (Netlify Function) that does not exist yet, plus the
+                public key id. Until that endpoint is built, a tier with
+                only a planId set stays on the #waitlist fallback — it is
+                published to the button as data-razorpay-plan-id so the
+                future handler can read it. Do NOT put a key_id in this
+                file; the key secret must never reach the browser.
+
+   FALLBACK CONTRACT: if a tier resolves to no usable destination, its
+   Subscribe Now button keeps href="#waitlist" — exactly today's
+   behaviour. There is no state in which a button becomes dead or "#".
+   ────────────────────────────────────────────────────────────────────── */
+const TIER_CHECKOUT = {
+  // ─── India · Desi Phool ───
+  in_monthly:      { url: '', planId: '' },  // ₹555/month
+  in_quarterly:    { url: '', planId: '' },  // ₹1,499 / 3 months
+  in_halfyearly:   { url: '', planId: '' },  // ₹2,799 / 6 months
+  in_annual:       { url: '', planId: '' },  // ₹4,999 / 12 months
+
+  // ─── International · Global Phool ───
+  intl_monthly:    { url: '', planId: '' },  // ₹1,100/month
+  intl_quarterly:  { url: '', planId: '' },  // ₹3,299 / 3 months
+  intl_halfyearly: { url: '', planId: '' },  // ₹5,999 / 6 months
+  intl_annual:     { url: '', planId: '' },  // ₹10,999 / 12 months
+};
+
 function toggleFaq(el) {
   const item = el.parentElement;
   const open = item.classList.contains('open');
@@ -1033,6 +1114,125 @@ document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   form.querySelectorAll('input').forEach(input => {
     input.addEventListener('input', clearError);
   });
+})();
+
+/* ============================================================
+   TIER SELECTION — .plan-block cards
+   Each card's tier list is an ARIA radiogroup with roving
+   tabindex. Cards are wired independently, so selecting in one
+   never touches the other. The card's Subscribe Now button
+   retargets to the selected tier's configured destination, and
+   falls back to href="#waitlist" whenever none is configured.
+
+   Entirely defensive: any missing element, unknown tier key or
+   empty config resolves to the waitlist fallback rather than
+   throwing. The whole block is wrapped so a failure here can
+   never take down the rest of the page.
+============================================================ */
+(function () {
+  var FALLBACK_HREF = '#waitlist';
+
+  // Returns {href} | {planId} | null. Never throws, never returns '#'.
+  function resolveDestination(tierKey) {
+    var cfg = (typeof TIER_CHECKOUT === 'object' && TIER_CHECKOUT)
+      ? TIER_CHECKOUT[tierKey] : null;
+    if (!cfg || typeof cfg !== 'object') return null;
+
+    var url = typeof cfg.url === 'string' ? cfg.url.trim() : '';
+    // Only accept a real absolute URL — never a bare '#' or junk.
+    if (url && /^https?:\/\//i.test(url)) return { href: url, planId: '' };
+
+    var planId = typeof cfg.planId === 'string' ? cfg.planId.trim() : '';
+    if (planId) return { href: '', planId: planId };
+
+    return null;
+  }
+
+  function initCard(card) {
+    var group = card.querySelector('.tier-list[role="radiogroup"]');
+    var button = card.querySelector('.btn-po, .btn-pw');
+    if (!group || !button) return;
+
+    var rows = Array.prototype.slice.call(
+      group.querySelectorAll('.tier-row[role="radio"]')
+    );
+    if (!rows.length) return;
+
+    function applyDestination(row) {
+      var dest = row ? resolveDestination(row.getAttribute('data-tier')) : null;
+
+      if (dest && dest.href) {
+        button.setAttribute('href', dest.href);
+        button.removeAttribute('data-razorpay-plan-id');
+      } else {
+        // No usable destination (empty config, unknown tier, or planId
+        // awaiting its server endpoint) → today's behaviour, unchanged.
+        button.setAttribute('href', FALLBACK_HREF);
+        if (dest && dest.planId) {
+          button.setAttribute('data-razorpay-plan-id', dest.planId);
+        } else {
+          button.removeAttribute('data-razorpay-plan-id');
+        }
+      }
+
+      if (row) {
+        button.setAttribute('data-selected-tier', row.getAttribute('data-tier') || '');
+        var name = row.querySelector('.tier-name');
+        // Keep the button's accessible name in sync with the choice.
+        button.setAttribute(
+          'aria-label',
+          'Subscribe Now' + (name && name.textContent ? ' — ' + name.textContent.trim() : '')
+        );
+      }
+    }
+
+    function select(row, focusIt) {
+      if (!row) return;
+      rows.forEach(function (r) {
+        var on = r === row;
+        r.setAttribute('aria-checked', on ? 'true' : 'false');
+        r.setAttribute('tabindex', on ? '0' : '-1');
+      });
+      applyDestination(row);
+      if (focusIt) row.focus();
+    }
+
+    rows.forEach(function (row, i) {
+      row.addEventListener('click', function () { select(row, false); });
+
+      row.addEventListener('keydown', function (e) {
+        var k = e.key;
+        if (k === ' ' || k === 'Spacebar') {
+          e.preventDefault();
+          select(row, true);
+          return;
+        }
+        var next = null;
+        if (k === 'ArrowDown' || k === 'ArrowRight') next = rows[(i + 1) % rows.length];
+        else if (k === 'ArrowUp' || k === 'ArrowLeft') next = rows[(i - 1 + rows.length) % rows.length];
+        else if (k === 'Home') next = rows[0];
+        else if (k === 'End') next = rows[rows.length - 1];
+        if (next) {
+          e.preventDefault();
+          select(next, true);
+        }
+      });
+    });
+
+    // Honour whichever row is marked checked in the markup (Monthly),
+    // falling back to the first row if none is.
+    var initial = rows.filter(function (r) {
+      return r.getAttribute('aria-checked') === 'true';
+    })[0] || rows[0];
+    select(initial, false);
+  }
+
+  try {
+    document.querySelectorAll('.pricing-grid2 .plan-block').forEach(initCard);
+  } catch (err) {
+    // Leave every button on its markup default (#waitlist) and move on.
+    console.error('[tier-select]', err);
+  }
 })();
 </script>
 </body>
