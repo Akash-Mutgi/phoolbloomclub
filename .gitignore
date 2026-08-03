@@ -10,14 +10,17 @@
 # Dependencies
 node_modules/
 
-# Large binary assets — kept out of git history AND out of the publish root.
-# The wallpaper zips and folders now live at ../phoolbloom-assets/ so they are
-# no longer uploaded to Netlify on deploy. These patterns stay as a guard
-# against them being copied back in.
+# Large binary assets — kept out of git history.
 #
-# OPEN ISSUE: welcome/index.html links /phool-wallpapers.zip, which no longer
-# exists in the publish directory. That download will 404 on the next deploy
-# until the files are served from a gated location and the link updated.
+# Master copies live at ../phoolbloom-assets/ (both zips + unzipped folders).
+# ONE file is deliberately kept in the publish root: phool-wallpapers.zip,
+# the clean 5-PNG archive that welcome/index.html links. It must be present
+# at deploy time or that download 404s. It is untracked, so a fresh clone
+# will not have it — copy it back from ../phoolbloom-assets/ before deploying
+# from a new checkout.
+#
+# OPEN ISSUE: that URL is public and guessable, so the founding-member
+# wallpapers are not actually gated. Accepted for this deploy only.
 phool-wallpapers*.zip
 phool-wallpapers/
 phool-wallpapers 2/
