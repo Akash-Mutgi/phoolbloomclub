@@ -17,3 +17,29 @@
   from = "/"
   to = "/index.html"
   status = 200
+
+# ── Cache headers ──────────────────────────────────────────────────────
+# HTML must always revalidate so a deploy is picked up on the next request
+# rather than sitting behind a cached copy.
+#
+# NOTE: this is what Netlify already sends by default. Pinning it here is
+# a guarantee, not a fix — it means the behaviour cannot drift if those
+# defaults ever change. Assets (js, images, zip) are deliberately NOT
+# given rules here and keep Netlify's defaults.
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Directory indexes are requested as "/welcome/", a path that does not end
+# in .html, so the rule above does not match them. Listed explicitly.
+[[headers]]
+  for = "/welcome/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
