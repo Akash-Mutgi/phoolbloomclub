@@ -42,6 +42,32 @@ const PLAN_TOTAL_COUNT = new Map([
   ['plan_T2jFAcpX9baJIb',  25], // Yearly       ₹10999
 ]);
 
+// Which region each plan ships to. Derived from the PLAN ID, never from
+// anything the client sends — a caller can post any country string it likes,
+// so the plan is the only trustworthy signal of which product was bought.
+const DESI_PLANS = new Set([
+  'plan_T2iy8igtr4NNlA', 'plan_T2j4RwqvdB20t1',
+  'plan_T2j5QpPcvmcciF', 'plan_T2j7T90UVz5uvm',
+]);
+const GLOBAL_PLANS = new Set([
+  'plan_T2j9gFKzuMeZV0', 'plan_T2jAi0qikOAied',
+  'plan_T2jDRG4X3DCqk6', 'plan_T2jFAcpX9baJIb',
+]);
+
+// Rejections point at the plan that DOES fit, so nobody dead-ends.
+const WRONG_REGION = {
+  desi: {
+    error: "This address isn't in India, so it needs our Global Phool plan — " +
+           "the same envelope, priced for international postage.",
+    redirect: '/checkout/global/',
+  },
+  global: {
+    error: "Shipping to India? Our Desi Phool plan is made for you — " +
+           "it's the same envelope at a lower price.",
+    redirect: '/checkout/desi/',
+  },
+};
+
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -92,16 +118,31 @@ exports.handler = async (event) => {
     return json(400, { error: 'Delivery address is incomplete' });
   }
 
+  // ---- REGION ENFORCEMENT ----
+  // Checked BEFORE the postcode rule, so a wrong-region address gets the
+  // message that redirects rather than a confusing postcode error.
+  const region = DESI_PLANS.has(planId) ? 'desi'
+               : GLOBAL_PLANS.has(planId) ? 'global'
+               : null;
+  if (region === 'desi' && country !== 'India') {
+    return json(400, WRONG_REGION.desi);
+  }
+  if (region === 'global' && country === 'India') {
+    return json(400, WRONG_REGION.global);
+  }
+
   // Postcode: India has one exact format, so check it properly. Everywhere
   // else gets a loose sanity check rather than a guessed national regex —
   // a wrong strict rule would reject real customers.
-  const pcOk = country === 'India'
+  // Region and country now agree (enforced above), but key the rule off the
+  // region so it stays correct even if that ever changes.
+  const pcOk = (region === 'desi' || country === 'India')
     ? /^[1-9]\d{5}$/.test(pincode)
     : (pincode.length >= 3 && pincode.length <= 12 &&
        /^[A-Za-z0-9][A-Za-z0-9 -]*[A-Za-z0-9]$/.test(pincode) &&
        !/^(.)\1+$/.test(pincode.replace(/[ -]/g, '')));
   if (!pcOk) {
-    return json(400, { error: country === 'India'
+    return json(400, { error: (region === 'desi' || country === 'India')
       ? 'Please enter a valid 6-digit Indian pincode'
       : 'Please enter a valid postal code' });
   }

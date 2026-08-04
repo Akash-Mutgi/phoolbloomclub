@@ -96,6 +96,7 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
 .footer-copy{color:rgba(255,255,255,.4);font-size:.78rem}
 @media(max-width:540px){.card{padding:22px 18px}}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.err-link{display:inline-block;margin-left:4px;color:#6b4ba8;font-weight:600;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -222,6 +223,23 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
   let selectedId = null;
 
   function showError(msg){ errorEl.textContent = msg; errorEl.hidden = false; }
+
+  /* Same as showError but appends a link, so a wrong-region address sends
+     someone to the right plan instead of dead-ending. Built from DOM nodes
+     and the href is whitelisted, so a server string can never inject markup. */
+  const REDIRECTS = { '/checkout/desi/': 'Go to Desi Phool →',
+                      '/checkout/global/': 'Go to Global Phool →' };
+  function showErrorWithLink(msg, href){
+    if (!Object.prototype.hasOwnProperty.call(REDIRECTS, href)) { showError(msg); return; }
+    errorEl.textContent = '';
+    errorEl.appendChild(document.createTextNode(msg + ' '));
+    const a = document.createElement('a');
+    a.href = href;
+    a.textContent = REDIRECTS[href];
+    a.className = 'err-link';
+    errorEl.appendChild(a);
+    errorEl.hidden = false;
+  }
   function clearError(){ errorEl.hidden = true; errorEl.textContent = ''; }
   function setLoading(on){ button.disabled = on; button.classList.toggle('is-loading', on); }
   function planById(id){ return plans.find(p => p.id === id); }
@@ -297,12 +315,21 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
     }
   }
 
+  /* Region enforcement, client side. This page only offers countries its
+     plan can ship to, so the wrong combination is unreachable through the
+     UI. It is UX, not the guarantee — create-subscription.js re-checks the
+     region from the PLAN ID, which the client cannot influence. */
+  const ALLOWED_COUNTRIES = COUNTRIES.filter(c => c !== 'India');
+  const DEFAULT_COUNTRY   = '';
+
   function setupAddress(){
     const countrySel = document.getElementById('country');
-    countrySel.innerHTML = COUNTRIES.map(c =>
-      '<option value="' + esc(c) + '"' + (c === 'India' ? ' selected' : '') + '>' + esc(c) + '</option>'
+    const opts = ALLOWED_COUNTRIES.map(c =>
+      '<option value="' + esc(c) + '"' + (c === DEFAULT_COUNTRY ? ' selected' : '') + '>' + esc(c) + '</option>'
     ).join('');
-    renderStateField('India');
+    countrySel.innerHTML =
+      (DEFAULT_COUNTRY ? '' : '<option value="" disabled selected>select your country</option>') + opts;
+    renderStateField(DEFAULT_COUNTRY);
     countrySel.addEventListener('change', function(){ renderStateField(countrySel.value); clearError(); });
   }
 
@@ -385,6 +412,10 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
     if (!pincode)                                            { showError('Please enter your pincode / ZIP.'); form.pincode.focus(); return; }
     if (!country)                                            { showError('Please select your country.'); form.country.focus(); return; }
     if (!state)                                              { showError('Please enter your state / province.'); form.state.focus(); return; }
+    if (country === 'India') {
+      showErrorWithLink("Shipping to India? Our Desi Phool plan is made for you — it's the same envelope at a lower price.", '/checkout/desi/');
+      return;
+    }
     if (!isValidPostcode(pincode, country))                  { showError(postcodeHint(country)); form.pincode.focus(); return; }
     if (!phoneCode)                                          { showError('Please choose your phone country code.'); form.phone_code.focus(); return; }
     if (!/^\d{6,14}$/.test(phoneNum))                        { showError('Please enter your phone number — digits only, 6 to 14 of them, without the country code.'); form.phone.focus(); return; }
@@ -413,7 +444,20 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
       }),
       });
       sub = await resp.json().catch(() => ({}));
-      if (!resp.ok || !sub.subscription_id) throw new Error(sub.error || ('HTTP ' + resp.status));
+      if (!resp.ok || !sub.subscription_id) {
+        // A 400 is a validation result the visitor can act on, so show what
+        // the server actually said — including a link to the right plan when
+        // it offers one. Anything else stays generic.
+        setLoading(false);
+        if (resp.status === 400 && sub && sub.error) {
+          if (sub.redirect) showErrorWithLink(sub.error, sub.redirect);
+          else showError(sub.error);
+        } else {
+          showError("We couldn't start your subscription. Please try again, or write to hello@phoolbloomclub.com.");
+        }
+        console.error('[checkout] create-subscription', resp.status, sub && sub.error);
+        return;
+      }
     } catch (err) {
       setLoading(false);
       showError("We couldn't start your subscription. Please try again, or write to hello@phoolbloomclub.com.");
