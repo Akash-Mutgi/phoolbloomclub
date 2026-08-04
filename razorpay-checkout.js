@@ -45,12 +45,11 @@ const CHECKOUT_LINKS = {
   // could not be shipped to. Those links also carried a total_count that
   // ends the subscription after 12 months.
   //
-  // The eight subscription links still exist and still work for anyone
-  // already holding one. They are DELIBERATELY NOT LISTED HERE: this file
+  // The eight subscription links are DELIBERATELY NOT LISTED HERE: this file
   // is served publicly, and printing them would let anyone read the source
   // and subscribe through the very links this change is closing.
-  // The full list is in the commit message of 9ae9ef5, and in the Razorpay
-  // Dashboard under Subscriptions.
+  // Look them up in the Razorpay Dashboard under Subscriptions — six were
+  // cancelled on 2026-08-04; two are active with paying customers attached.
   //
   // NEXT: replaced by /checkout/desi/ and /checkout/global/, which collect
   // the address before payment and create the subscription server-side.
