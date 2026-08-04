@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EK1XCDZWTH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-EK1XCDZWTH');
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Checkout · Desi Phool — Phool Bloom Club ✿</title>
@@ -190,9 +182,18 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
    The Key ID below is the PUBLIC Razorpay key — safe to expose.
 ============================================================ */
 (function () {
-  const RAZORPAY_KEY_ID = 'rzp_live_T2kcFfTUglndi2'; // public key only
+  // ===================================================================
+  // TODO — LAST OUTSTANDING EDIT BEFORE THIS PAGE CAN BE DEPLOYED
+  // This key id is STALE. It predates a key rotation and will make
+  // checkout fail. Replace it with the CURRENT public key id from the
+  // Razorpay Dashboard (Account & Settings -> API Keys) once the secret
+  // has been rotated. Do not deploy /checkout/ until this is done.
+  // ===================================================================
+  const RAZORPAY_KEY_ID = 'rzp_live_T2kcFfTUglndi2'; // STALE — see TODO above
   const REGION = 'desi';
 
+  // NOTE: `tier` is the pricing tier (regular vs founding), NOT a plan
+  // identifier — it is 'regular' for all four. Use `id` to identify a plan.
   const REGULAR_PLANS = [
     { id: 'plan_T2iy8igtr4NNlA', name: 'Monthly',     sub: 'Billed every month',     amount: '₹555',   period: '/month',    tier: 'regular' },
     { id: 'plan_T2j4RwqvdB20t1', name: 'Quarterly',   sub: 'Billed every 3 months',  amount: '₹1,499', period: '/quarter',  tier: 'regular' },
@@ -341,9 +342,14 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
       theme:           { color: '#6B2D8B' },
       method: { upi: true, wallet: false, netbanking: false, card: true },
       handler: function () {
-        // Authorisation captured. Fulfilment (Kit tagging) happens via the
-        // razorpay-webhook on first charge — just take them to welcome.
-        window.location.href = '/welcome/?paid=' + REGION + '&plan=' + plan.tier +
+        // Authorisation captured. This is CLIENT-SIDE and is NOT proof of
+        // payment — anyone can navigate to /thank-you/ directly. Fulfilment
+        // (Kit tagging) happens only in razorpay-webhook.js on first charge,
+        // which is the single source of truth. This redirect is UX only.
+        // plan.id identifies the exact plan; plan.tier could not (it is
+        // 'regular' for every plan in this list).
+        window.location.href = '/thank-you/?region=' + REGION +
+          '&plan=' + encodeURIComponent(plan.id) +
           '&first_name=' + encodeURIComponent(firstName);
       },
       modal: {
