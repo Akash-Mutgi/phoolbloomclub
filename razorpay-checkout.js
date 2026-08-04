@@ -27,9 +27,11 @@ const CHECKOUT_LINKS = {
 
   // ---- FOUNDING MEMBER ----
   // The founding cards were removed from the page, so these keys render
-  // nowhere. founding_india's link is parked and shared directly:
-  // sub_TLMnXtqnz4N0i5 -> https://rzp.io/rzp/syj63wr (Rs 399/month, 7 cycles).
-  // No founding_intl plan exists. Left empty deliberately.
+  // nowhere. founding_india's link (subscription sub_TLMnXtqnz4N0i5) is
+  // parked and shared directly with one customer — the URL is deliberately
+  // NOT written here, because this file is served publicly and printing it
+  // would let anyone subscribe at the founding rate. It is in the Razorpay
+  // Dashboard. Left empty deliberately.
   founding_india:         '',
   founding_intl:          '',
 
