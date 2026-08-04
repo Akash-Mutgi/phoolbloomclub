@@ -2,7 +2,13 @@
  * Netlify Function — Razorpay subscription creation
  *
  * POST /api/create-subscription
- *   body: { plan_id, first_name, email, phone?, notes: { address } }
+ *   body: { plan_id, first_name, last_name, email, phone,
+ *           address: { line1, line2?, city, state, pincode, country } }
+ *
+ * The client sends the address STRUCTURED, not pre-joined, so every part can
+ * be re-validated here. The client checks are UX; these are what protect the
+ * data. The canonical address string for Razorpay notes is assembled below,
+ * from the validated parts only.
  *
  * Creates a Razorpay subscription server-side (secret never touches the
  * client) and returns its id for the Razorpay checkout modal. The actual
@@ -54,29 +60,60 @@ exports.handler = async (event) => {
 
   const planId    = (payload.plan_id    || '').trim();
   const firstName = (payload.first_name || '').trim();
+  const lastName  = (payload.last_name  || '').trim();
   const email     = (payload.email      || '').trim();
   const phone     = (payload.phone      || '').trim();
-  const address   = ((payload.notes && payload.notes.address) || '').trim();
+
+  const addr    = payload.address || {};
+  const line1   = (addr.line1   || '').trim();
+  const line2   = (addr.line2   || '').trim();
+  const city    = (addr.city    || '').trim();
+  const state   = (addr.state   || '').trim();
+  const pincode = (addr.pincode || '').trim();
+  const country = (addr.country || '').trim();
 
   if (!PLAN_TOTAL_COUNT.has(planId)) {
     return json(400, { error: 'Unknown or missing plan_id' });
   }
-  if (!firstName || !email) {
-    return json(400, { error: 'first_name and email are required' });
-  }
-  if (!address) {
-    return json(400, { error: 'Delivery address is required' });
-  }
-  // Combined address format from checkout:
-  //   "line1, [line2,] city, state, pincode, country" (line2 optional)
-  // → require at least 5 non-empty comma-separated parts so a structured,
-  //   deliverable address always reaches fulfilment.
-  const addressParts = address.split(',').map((s) => s.trim()).filter(Boolean);
-  if (addressParts.length < 5) {
-    return json(400, { error: 'Delivery address looks incomplete' });
+  if (!firstName || !lastName) {
+    return json(400, { error: 'first_name and last_name are required' });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json(400, { error: 'Invalid email address' });
+  }
+
+  // Phone is REQUIRED: it is the delivery contact couriers call.
+  // Canonical shape is "<+code> <digits>", e.g. "+49 17636071945".
+  if (!/^\+\d{1,4} \d{6,14}$/.test(phone)) {
+    return json(400, { error: 'A phone number with country code is required, e.g. +91 9876543210' });
+  }
+
+  if (!line1 || !city || !state || !pincode || !country) {
+    return json(400, { error: 'Delivery address is incomplete' });
+  }
+
+  // Postcode: India has one exact format, so check it properly. Everywhere
+  // else gets a loose sanity check rather than a guessed national regex —
+  // a wrong strict rule would reject real customers.
+  const pcOk = country === 'India'
+    ? /^[1-9]\d{5}$/.test(pincode)
+    : (pincode.length >= 3 && pincode.length <= 12 &&
+       /^[A-Za-z0-9][A-Za-z0-9 -]*[A-Za-z0-9]$/.test(pincode) &&
+       !/^(.)\1+$/.test(pincode.replace(/[ -]/g, '')));
+  if (!pcOk) {
+    return json(400, { error: country === 'India'
+      ? 'Please enter a valid 6-digit Indian pincode'
+      : 'Please enter a valid postal code' });
+  }
+
+  // Canonical address string, assembled here from validated parts.
+  const address = [line1, line2, city, state, pincode, country].filter(Boolean).join(', ');
+
+  // Razorpay caps each notes VALUE at 255 chars. Truncating a delivery
+  // address would silently drop the pincode and country (they are last),
+  // so reject instead and let the customer shorten it.
+  if (address.length > 255) {
+    return json(400, { error: 'Delivery address is too long — please shorten it to under 255 characters' });
   }
 
   const keyId     = process.env.RAZORPAY_KEY_ID;
@@ -99,7 +136,15 @@ exports.handler = async (event) => {
     customer_notify: 1,
     notify_info:    notifyInfo,
     // Razorpay caps each notes value at 255 chars — keep address within bounds.
-    notes: { first_name: firstName, email, address: address.slice(0, 255) },
+    // Each value stays under Razorpay's 255-char notes limit. Name and phone
+    // are separate keys, so they do not eat into the address budget.
+    notes: {
+      first_name: firstName,
+      last_name:  lastName,
+      email:      email,
+      phone:      phone,
+      address:    address,
+    },
   };
 
   try {

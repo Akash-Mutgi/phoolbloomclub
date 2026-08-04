@@ -96,6 +96,7 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
 .footer-text{font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;color:#fff;margin-bottom:8px}
 .footer-copy{color:rgba(255,255,255,.4);font-size:.78rem}
 @media(max-width:540px){.card{padding:22px 18px}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
@@ -121,8 +122,16 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
     </div>
 
     <form class="co-form" id="co-form" novalidate hidden>
-      <label for="first_name">First name</label>
-      <input type="text" id="first_name" name="first_name" placeholder="your first name" required autocomplete="given-name">
+      <div class="co-row">
+        <div class="co-cell">
+          <label for="first_name">First name</label>
+          <input type="text" id="first_name" name="first_name" placeholder="your first name" required autocomplete="given-name">
+        </div>
+        <div class="co-cell">
+          <label for="last_name">Last name</label>
+          <input type="text" id="last_name" name="last_name" placeholder="your last name" required autocomplete="family-name">
+        </div>
+      </div>
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="email">
       <label for="address1">Address line 1</label>
@@ -149,8 +158,18 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
           <select id="country" name="country" required></select>
         </div>
       </div>
-      <label for="phone">Phone <span class="optional">(optional)</span></label>
-      <input type="tel" id="phone" name="phone" placeholder="+91 …" autocomplete="tel">
+      <label for="phone">Phone <span class="optional">(couriers use this to reach you)</span></label>
+      <div class="co-row">
+        <div class="co-cell co-cell-code">
+          <label for="phone_code" class="sr-only">Country code</label>
+          <select id="phone_code" name="phone_code" required></select>
+        </div>
+        <div class="co-cell">
+          <label for="phone" class="sr-only">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="phone number" required
+                 autocomplete="tel-national" inputmode="numeric" maxlength="14">
+        </div>
+      </div>
       <button type="submit" class="btn-pay" id="co-submit">
         <span class="btn-label">Continue to payment ✿</span>
         <span class="btn-loading">Opening secure checkout…</span>
@@ -214,6 +233,24 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
   function clearError(){ errorEl.hidden = true; errorEl.textContent = ''; }
   function setLoading(on){ button.disabled = on; button.classList.toggle('is-loading', on); }
   function planById(id){ return plans.find(p => p.id === id); }
+
+  /* Postcode validation. India has one exact, well-known format so it is
+     checked properly. Everywhere else gets a deliberately loose sanity check
+     rather than a guessed national regex — a wrong strict rule would block
+     real customers, which is worse than letting an odd value through. */
+  function isValidPostcode(pc, country){
+    pc = (pc || '').trim();
+    if (country === 'India') return /^[1-9]\d{5}$/.test(pc);
+    if (pc.length < 3 || pc.length > 12) return false;
+    if (!/^[A-Za-z0-9][A-Za-z0-9 -]*[A-Za-z0-9]$/.test(pc)) return false;
+    if (/^(.)\1+$/.test(pc.replace(/[ -]/g, ''))) return false; // 000, aaaa, ---
+    return true;
+  }
+  function postcodeHint(country){
+    return country === 'India'
+      ? 'Please enter a valid 6-digit Indian pincode.'
+      : 'Please enter a valid postal code (at least 3 characters, letters and digits).';
+  }
   function esc(x){ return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
   // ---- Delivery address: full country list + dynamic state field ----
@@ -240,6 +277,32 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
     el.addEventListener('input', clearError);
     el.addEventListener('change', clearError);
     if (existing) existing.replaceWith(el); else cell.appendChild(el);
+  }
+
+  const DIAL = window.PB_DIAL_CODES || {};
+  // Region default: desi is India-only, global starts unset so nobody
+  // accidentally submits an Indian code from another country.
+  const DEFAULT_DIAL = '+91';
+
+  function setupPhoneCode(){
+    const sel = document.getElementById('phone_code');
+    if (!sel) return;
+    const opts = Object.keys(DIAL).sort().map(function(c){
+      return '<option value="' + DIAL[c] + '">' + DIAL[c] + '  ' + c + '</option>';
+    });
+    sel.innerHTML = '<option value="" disabled>code</option>' + opts.join('');
+    sel.value = DEFAULT_DIAL || '';
+    if (!sel.value) sel.selectedIndex = 0;
+    // Follow the delivery country unless the visitor has chosen a code themselves.
+    const countrySel = document.getElementById('country');
+    if (countrySel) {
+      sel.addEventListener('change', function(){ sel.dataset.touched = '1'; clearError(); });
+      countrySel.addEventListener('change', function(){
+        if (sel.dataset.touched) return;
+        const code = DIAL[countrySel.value];
+        if (code) sel.value = code;
+      });
+    }
   }
 
   function setupAddress(){
@@ -299,19 +362,26 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
     const pincode   = form.pincode.value.trim();
     const state     = form.state.value.trim();
     const country   = form.country.value.trim();
-    const phone     = form.phone.value.trim();
+    const lastName  = form.last_name.value.trim();
+    const phoneCode = form.phone_code.value.trim();
+    const phoneNum  = form.phone.value.trim();
     const plan      = planById(selectedId);
 
     if (!plan)                                               { showError('Please choose a plan.'); return; }
     if (!firstName)                                          { showError('Please share your first name.'); form.first_name.focus(); return; }
+    if (!lastName)                                           { showError('Please share your last name — couriers need it for the label.'); form.last_name.focus(); return; }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Please enter a valid email address.'); form.email.focus(); return; }
     if (!address1)                                           { showError('Please enter your address (line 1).'); form.address1.focus(); return; }
     if (!city)                                               { showError('Please enter your city.'); form.city.focus(); return; }
     if (!pincode)                                            { showError('Please enter your pincode / ZIP.'); form.pincode.focus(); return; }
     if (!country)                                            { showError('Please select your country.'); form.country.focus(); return; }
     if (!state)                                              { showError('Please enter your state / province.'); form.state.focus(); return; }
+    if (!isValidPostcode(pincode, country))                  { showError(postcodeHint(country)); form.pincode.focus(); return; }
+    if (!phoneCode)                                          { showError('Please choose your phone country code.'); form.phone_code.focus(); return; }
+    if (!/^\d{6,14}$/.test(phoneNum))                        { showError('Please enter your phone number — digits only, 6 to 14 of them, without the country code.'); form.phone.focus(); return; }
 
     const address = [address1, address2, city, state, pincode, country].filter(Boolean).join(', ');
+    const phone   = phoneCode + ' ' + phoneNum;   // e.g. "+49 17636071945"
 
     setLoading(true);
 
@@ -320,7 +390,18 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
       const resp = await fetch('/api/create-subscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ plan_id: plan.id, first_name: firstName, email, phone, notes: { address } }),
+        body: JSON.stringify({
+        plan_id: plan.id,
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        phone: phone,
+        // Structured so create-subscription.js can re-validate each part
+        // server-side rather than trusting a pre-joined string.
+        address: { line1: address1, line2: address2, city: city, state: state,
+                   pincode: pincode, country: country },
+        notes: { address: address },
+      }),
       });
       sub = await resp.json().catch(() => ({}));
       if (!resp.ok || !sub.subscription_id) throw new Error(sub.error || ('HTTP ' + resp.status));
@@ -338,7 +419,7 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
       name:            'Phool Bloom Club',
       description:     'Desi Phool · ' + plan.name,
       image:           '/android-chrome-192x192.png',
-      prefill:         { name: firstName, email: email, contact: phone || undefined },
+      prefill:         { name: firstName + ' ' + lastName, email: email, contact: phone },
       theme:           { color: '#6B2D8B' },
       method: { upi: true, wallet: false, netbanking: false, card: true },
       handler: function () {
@@ -372,6 +453,7 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
   });
 
   setupAddress();
+  setupPhoneCode();
   form.querySelectorAll('input').forEach(input => input.addEventListener('input', clearError));
   init();
 })();
