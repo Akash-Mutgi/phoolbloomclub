@@ -43,17 +43,12 @@ const CHECKOUT_LINKS = {
   // could not be shipped to. Those links also carried a total_count that
   // ends the subscription after 12 months.
   //
-  // The links below still exist and still work for anyone already
-  // holding one. They are kept here only so they can be restored or
-  // cancelled deliberately, NOT to be pasted back in:
-  //   desi_monthly    https://rzp.io/rzp/StkkgonD   sub_TLNHllsVJ60esp
-  //   desi_seasonal   https://rzp.io/rzp/5sZk9u7    sub_TLNHp3jndNkRgR
-  //   desi_halfyear   https://rzp.io/rzp/L2GEGUL    sub_TLNHs3Gzan2ebN
-  //   desi_year       https://rzp.io/rzp/Ggi4GcRU   sub_TLNHvBsmA6TsoX
-  //   global_monthly  https://rzp.io/rzp/hclCELfq   sub_TLNHyG1GJGbW8v
-  //   global_seasonal https://rzp.io/rzp/6wBrkxMU   sub_TLNI23fHVjKDgn
-  //   global_halfyear https://rzp.io/rzp/WscnVqzV   sub_TLNI53lCcDnhX5
-  //   global_year     https://rzp.io/rzp/LXUsxQk    sub_TLNI854uGuGI84
+  // The eight subscription links still exist and still work for anyone
+  // already holding one. They are DELIBERATELY NOT LISTED HERE: this file
+  // is served publicly, and printing them would let anyone read the source
+  // and subscribe through the very links this change is closing.
+  // The full list is in the commit message of 9ae9ef5, and in the Razorpay
+  // Dashboard under Subscriptions.
   //
   // NEXT: replaced by /checkout/desi/ and /checkout/global/, which collect
   // the address before payment and create the subscription server-side.

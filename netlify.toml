@@ -43,3 +43,13 @@
   for = "/welcome/"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+# razorpay-checkout.js decides where every Subscribe button points, so a
+# stale copy can send a visitor to a checkout we have closed. It must
+# revalidate on every request, like the HTML. The <script> tag also carries
+# a ?v= query so a URL change forces a fetch regardless of what a browser
+# already holds — bump that version whenever this file's behaviour changes.
+[[headers]]
+  for = "/razorpay-checkout.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
