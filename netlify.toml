@@ -12,6 +12,27 @@
   status = 200
   force = true
 
+# Pretty URL: /api/create-subscription → /.netlify/functions/create-subscription
+[[redirects]]
+  from = "/api/create-subscription"
+  to = "/.netlify/functions/create-subscription"
+  status = 200
+  force = true
+
+# Pretty URL: /api/razorpay-webhook → /.netlify/functions/razorpay-webhook
+[[redirects]]
+  from = "/api/razorpay-webhook"
+  to = "/.netlify/functions/razorpay-webhook"
+  status = 200
+  force = true
+
+# Pretty URL: /api/sync-subscribers → /.netlify/functions/sync-subscribers
+[[redirects]]
+  from = "/api/sync-subscribers"
+  to = "/.netlify/functions/sync-subscribers"
+  status = 200
+  force = true
+
 # Default 200 for the root
 [[redirects]]
   from = "/"

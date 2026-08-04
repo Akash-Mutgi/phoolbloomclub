@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EK1XCDZWTH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EK1XCDZWTH');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout · Global Phool — Phool Bloom Club ✿</title>
+<meta name="description" content="Subscribe to the Global Phool plan — one handmade envelope of flowers, every month, delivered worldwide.">
+
+<!-- Favicons (same as homepage) -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#6b4ba8;--amber:#f6a93a;--yellow:#f7ec8d;--green:#94b15e;--green-dark:#6a8a3e;
+  --cream:#f5f4ed;--dark:#241820;--purple-light:#ede5f8;--purple-mid:#b49dd4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--dark);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:500;line-height:1.2}
+h1{font-style:italic;font-size:clamp(2rem,4.5vw,3.2rem)}
+h2{font-style:italic;font-size:1.4rem}
+h3{font-style:normal;font-size:1.05rem}
+[hidden]{display:none !important}
+
+nav{background:rgba(245,244,237,.96);backdrop-filter:blur(14px);border-bottom:1px solid rgba(107,75,168,.1);padding:14px 32px;display:flex;align-items:center;justify-content:center}
+.nav-logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-mark{height:40px;width:auto;display:block}
+.nav-logo-text{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--dark);font-style:italic}
+
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:56px 24px}
+.checkout{max-width:540px;width:100%;text-align:center}
+.pill{display:inline-block;background:white;border:1.5px solid var(--purple-mid);color:var(--purple);border-radius:100px;padding:6px 18px;font-size:.76rem;font-weight:600;letter-spacing:.08em;margin-bottom:22px}
+.checkout h1{color:var(--dark);margin-bottom:8px}
+.checkout h1 em{color:var(--purple)}
+.intro{color:#5a4f6e;font-size:1rem;margin:0 auto 26px;max-width:430px}
+
+
+.card{background:#fff;border-radius:20px;padding:26px 24px;border:1.5px solid rgba(107,75,168,.1);box-shadow:0 8px 28px rgba(107,75,168,.08);margin-bottom:22px;text-align:left}
+.section-label{font-size:.7rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple-mid);margin-bottom:12px;display:block}
+
+.plans{display:flex;flex-direction:column;gap:10px;margin-bottom:6px}
+.plan{position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;border:2px solid rgba(107,75,168,.18);border-radius:14px;padding:14px 16px;cursor:pointer;transition:border-color .2s,background .2s}
+.plan:hover{border-color:var(--purple-mid)}
+.plan input{position:absolute;opacity:0;pointer-events:none}
+.plan.is-selected{border-color:var(--purple);background:#faf7ff}
+.plan-left{display:flex;align-items:center;gap:12px}
+.plan-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--purple-mid);flex-shrink:0;position:relative;transition:border-color .2s}
+.plan.is-selected .plan-radio{border-color:var(--purple)}
+.plan.is-selected .plan-radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--purple)}
+.plan-name{font-weight:600;font-size:.95rem;color:var(--dark)}
+.plan-sub{font-size:.76rem;color:#9a9099}
+.plan-price{text-align:right;white-space:nowrap}
+.plan-amount{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:1.2rem;color:var(--purple);line-height:1.1}
+.plan-period{font-size:.72rem;color:#9a9099}
+
+.co-form{display:flex;flex-direction:column;gap:12px;text-align:left;margin-top:20px}
+.co-form label{font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:-6px;display:block}
+.co-form input,.co-form textarea{width:100%;padding:13px 18px;border-radius:14px;border:2px solid rgba(107,75,168,.18);background:#fbfaff;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s}
+.co-form textarea{resize:vertical;min-height:84px;line-height:1.5}
+.co-form input:focus,.co-form textarea:focus,.co-form select:focus{border-color:var(--purple)}
+.co-form input::placeholder,.co-form textarea::placeholder{color:#b3a9bd}
+.co-form select{width:100%;padding:13px 40px 13px 18px;border-radius:14px;border:2px solid rgba(107,75,168,.18);background-color:#fbfaff;color:var(--dark);font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s;cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236b4ba8' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
+.co-form select:invalid{color:#b3a9bd}
+.co-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.co-cell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.co-cell label{margin-bottom:0}
+@media(max-width:540px){.co-row{grid-template-columns:1fr}}
+.optional{color:#b3a9bd;font-weight:500;text-transform:none;letter-spacing:0}
+
+.btn-pay{display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:8px;background:var(--amber);color:var(--dark);border:none;padding:16px 24px;border-radius:100px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:all .25s}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(246,169,58,.4)}
+.btn-pay:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-pay .btn-loading{display:none}
+.btn-pay.is-loading .btn-label{display:none}
+.btn-pay.is-loading .btn-loading{display:inline}
+
+.co-error{margin-top:14px;color:#a3322f;font-size:.86rem;background:rgba(220,80,80,.1);border:1px solid rgba(220,80,80,.28);padding:11px 16px;border-radius:10px;text-align:center}
+.loading-note{color:#9a9099;font-size:.9rem;padding:8px 0}
+.secure-note{margin-top:18px;color:#7a7080;font-size:.8rem}
+.secure-note strong{color:var(--purple)}
+.back{display:inline-block;margin-top:22px;color:var(--purple);text-decoration:none;font-size:.9rem;font-weight:500;border-bottom:1px solid transparent;transition:border-color .2s}
+.back:hover{border-color:var(--purple)}
+
+footer{background:var(--dark);padding:30px 24px;text-align:center}
+.footer-mark{height:34px;width:auto;display:block;margin:0 auto 10px}
+.footer-text{font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;color:#fff;margin-bottom:8px}
+.footer-copy{color:rgba(255,255,255,.4);font-size:.78rem}
+@media(max-width:540px){.card{padding:22px 18px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo-wrap">
+    <img class="nav-mark" src="/logo-nav.png" alt="Phool Bloom Club">
+    <span class="nav-logo-text">Phool Bloom Club</span>
+  </a>
+</nav>
+
+<main>
+  <div class="checkout">
+    <div class="pill">🌍 GLOBAL PHOOL · WORLDWIDE</div>
+    <h1>Subscribe to the<br><em>Global Phool.</em></h1>
+    <p class="intro">One handmade envelope of seasonal flowers, pressed and posted with love — delivered to your door, every month, anywhere in the world.</p>
+
+    <div class="card">
+      <span class="section-label">Choose your plan</span>
+      <div class="plans" id="plans">
+        <p class="loading-note" id="plans-loading">Loading plans…</p>
+      </div>
+    </div>
+
+    <form class="co-form" id="co-form" novalidate hidden>
+      <label for="first_name">First name</label>
+      <input type="text" id="first_name" name="first_name" placeholder="your first name" required autocomplete="given-name">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="email">
+      <label for="address1">Address line 1</label>
+      <input type="text" id="address1" name="address1" placeholder="house / flat / building name" required autocomplete="address-line1">
+      <label for="address2">Address line 2 <span class="optional">(optional)</span></label>
+      <input type="text" id="address2" name="address2" placeholder="street, area, landmark" autocomplete="address-line2">
+      <div class="co-row">
+        <div class="co-cell">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="your city" required autocomplete="address-level2">
+        </div>
+        <div class="co-cell">
+          <label for="pincode">Pincode / ZIP</label>
+          <input type="text" id="pincode" name="pincode" placeholder="postal code" required autocomplete="postal-code">
+        </div>
+      </div>
+      <div class="co-row">
+        <div class="co-cell" id="state-cell">
+          <label for="state">State</label>
+          <select id="state" name="state" required></select>
+        </div>
+        <div class="co-cell">
+          <label for="country">Country</label>
+          <select id="country" name="country" required></select>
+        </div>
+      </div>
+      <label for="phone">Phone <span class="optional">(optional)</span></label>
+      <input type="tel" id="phone" name="phone" placeholder="+91 …" autocomplete="tel">
+      <button type="submit" class="btn-pay" id="co-submit">
+        <span class="btn-label">Continue to payment ✿</span>
+        <span class="btn-loading">Opening secure checkout…</span>
+      </button>
+    </form>
+    <p class="co-error" id="co-error" hidden></p>
+
+    <p class="secure-note">🔒 Subscriptions are processed securely by <strong>Razorpay</strong>. Cancel anytime — we never see your card details.</p>
+    <a href="/" class="back">← back to phoolbloomclub.com</a>
+  </div>
+</main>
+
+<footer>
+  <img class="footer-mark" src="/logo-footer.png" alt="">
+  <div class="footer-text">Phool Bloom Club</div>
+  <p class="footer-copy">© 2026 · Made with petals &amp; ink 🌸</p>
+</footer>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/checkout/states-data.js"></script>
+<script>
+/* ============================================================
+   Global Phool checkout — Razorpay Subscriptions
+   1. On load: render the subscription plan options.
+   2. On submit: POST /api/create-subscription → subscription_id
+   3. Open Razorpay modal with that subscription_id.
+   4. On success: redirect to /welcome/ (fulfilment/tagging is handled
+      server-side by the razorpay-webhook on the first charge).
+   The Key ID below is the PUBLIC Razorpay key — safe to expose.
+============================================================ */
+(function () {
+  const RAZORPAY_KEY_ID = 'rzp_live_T2kcFfTUglndi2'; // public key only
+  const REGION = 'global';
+
+  const REGULAR_PLANS = [
+    { id: 'plan_T2j9gFKzuMeZV0', name: 'Monthly',     sub: 'Billed every month',    amount: '₹1,100',  period: '/month',    tier: 'regular' },
+    { id: 'plan_T2jAi0qikOAied', name: 'Quarterly',   sub: 'Billed every 3 months', amount: '₹3,299',  period: '/quarter',  tier: 'regular' },
+    { id: 'plan_T2jDRG4X3DCqk6', name: 'Half-yearly', sub: 'Billed every 6 months', amount: '₹5,299',  period: '/6 months', tier: 'regular' },
+    { id: 'plan_T2jFAcpX9baJIb', name: 'Yearly',      sub: 'Billed once a year',    amount: '₹10,999', period: '/year',     tier: 'regular' },
+  ];
+
+  const plansEl   = document.getElementById('plans');
+  const loadingEl = document.getElementById('plans-loading');
+  const form      = document.getElementById('co-form');
+  const button    = document.getElementById('co-submit');
+  const errorEl   = document.getElementById('co-error');
+
+  let plans = [];
+  let selectedId = null;
+
+  function showError(msg){ errorEl.textContent = msg; errorEl.hidden = false; }
+  function clearError(){ errorEl.hidden = true; errorEl.textContent = ''; }
+  function setLoading(on){ button.disabled = on; button.classList.toggle('is-loading', on); }
+  function planById(id){ return plans.find(p => p.id === id); }
+  function esc(x){ return String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ---- Delivery address: full country list + dynamic state field ----
+  const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
+
+  const STATES = window.PB_STATES || {};
+
+  function renderStateField(countryName){
+    const cell     = document.getElementById('state-cell');
+    const existing = document.getElementById('state');
+    const states   = STATES[countryName];
+    let el;
+    if (states && states.length){
+      el = document.createElement('select');
+      el.innerHTML = '<option value="" disabled selected>select state / province</option>' +
+        states.map(s => '<option value="' + esc(s) + '">' + esc(s) + '</option>').join('');
+    } else {
+      el = document.createElement('input');
+      el.type = 'text';
+      el.placeholder = 'state / province / region';
+      el.setAttribute('autocomplete', 'address-level1');
+    }
+    el.id = 'state'; el.name = 'state'; el.required = true;
+    el.addEventListener('input', clearError);
+    el.addEventListener('change', clearError);
+    if (existing) existing.replaceWith(el); else cell.appendChild(el);
+  }
+
+  function setupAddress(){
+    const countrySel = document.getElementById('country');
+    countrySel.innerHTML = COUNTRIES.map(c =>
+      '<option value="' + esc(c) + '"' + (c === 'India' ? ' selected' : '') + '>' + esc(c) + '</option>'
+    ).join('');
+    renderStateField('India');
+    countrySel.addEventListener('change', function(){ renderStateField(countrySel.value); clearError(); });
+  }
+
+  function renderPlans(list){
+    plans = list;
+    plansEl.innerHTML = '';
+    list.forEach((p, i) => {
+      const wrap = document.createElement('label');
+      wrap.className = 'plan' + (i === 0 ? ' is-selected' : '');
+      wrap.innerHTML =
+        '<span class="plan-left">' +
+          '<input type="radio" name="plan" value="' + p.id + '"' + (i === 0 ? ' checked' : '') + '>' +
+          '<span class="plan-radio"></span>' +
+          '<span><span class="plan-name">' + p.name +
+          '</span><br><span class="plan-sub">' + p.sub + '</span></span>' +
+        '</span>' +
+        '<span class="plan-price"><span class="plan-amount">' + p.amount + '</span>' +
+          '<span class="plan-period">' + p.period + '</span></span>';
+      wrap.querySelector('input').addEventListener('change', () => selectPlan(p.id));
+      plansEl.appendChild(wrap);
+    });
+    if (list.length) selectPlan(list[0].id);
+  }
+
+  function selectPlan(id){
+    selectedId = id;
+    [...plansEl.querySelectorAll('.plan')].forEach(el => {
+      const input = el.querySelector('input');
+      el.classList.toggle('is-selected', input.value === id);
+      input.checked = input.value === id;
+    });
+  }
+
+  async function init(){
+    loadingEl.remove();
+    renderPlans(REGULAR_PLANS.slice());
+    form.hidden = false;
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearError();
+
+    const firstName = form.first_name.value.trim();
+    const email     = form.email.value.trim();
+    const address1  = form.address1.value.trim();
+    const address2  = form.address2.value.trim();
+    const city      = form.city.value.trim();
+    const pincode   = form.pincode.value.trim();
+    const state     = form.state.value.trim();
+    const country   = form.country.value.trim();
+    const phone     = form.phone.value.trim();
+    const plan      = planById(selectedId);
+
+    if (!plan)                                               { showError('Please choose a plan.'); return; }
+    if (!firstName)                                          { showError('Please share your first name.'); form.first_name.focus(); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Please enter a valid email address.'); form.email.focus(); return; }
+    if (!address1)                                           { showError('Please enter your address (line 1).'); form.address1.focus(); return; }
+    if (!city)                                               { showError('Please enter your city.'); form.city.focus(); return; }
+    if (!pincode)                                            { showError('Please enter your pincode / ZIP.'); form.pincode.focus(); return; }
+    if (!country)                                            { showError('Please select your country.'); form.country.focus(); return; }
+    if (!state)                                              { showError('Please enter your state / province.'); form.state.focus(); return; }
+
+    const address = [address1, address2, city, state, pincode, country].filter(Boolean).join(', ');
+
+    setLoading(true);
+
+    let sub;
+    try {
+      const resp = await fetch('/api/create-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan_id: plan.id, first_name: firstName, email, phone, notes: { address } }),
+      });
+      sub = await resp.json().catch(() => ({}));
+      if (!resp.ok || !sub.subscription_id) throw new Error(sub.error || ('HTTP ' + resp.status));
+    } catch (err) {
+      setLoading(false);
+      showError("We couldn't start your subscription. Please try again, or write to hello@phoolbloomclub.com.");
+      console.error('[checkout] create-subscription', err);
+      return;
+    }
+
+    const rzp = new Razorpay({
+      key:             RAZORPAY_KEY_ID,
+      subscription_id: sub.subscription_id,
+      recurring:       true,
+      name:            'Phool Bloom Club',
+      description:     'Global Phool · ' + plan.name,
+      image:           '/android-chrome-192x192.png',
+      prefill:         { name: firstName, email: email, contact: phone || undefined },
+      theme:           { color: '#6B2D8B' },
+      method: { upi: true, wallet: false, netbanking: false, card: true },
+      handler: function () {
+        // Authorisation captured. Fulfilment (Kit tagging) happens via the
+        // razorpay-webhook on first charge — just take them to welcome.
+        window.location.href = '/welcome/?paid=' + REGION + '&plan=' + plan.tier +
+          '&first_name=' + encodeURIComponent(firstName);
+      },
+      modal: {
+        ondismiss: function () {
+          setLoading(false);
+          showError('Checkout was closed before payment completed. You can try again whenever you’re ready.');
+        },
+      },
+    });
+
+    rzp.on('payment.failed', function (resp) {
+      setLoading(false);
+      const reason = (resp && resp.error && resp.error.description) || 'Your payment could not be processed.';
+      showError(reason + ' Please try again, or use a different method.');
+      console.error('[checkout] payment.failed', resp && resp.error);
+    });
+
+    setLoading(false);
+    rzp.open();
+  });
+
+  setupAddress();
+  form.querySelectorAll('input').forEach(input => input.addEventListener('input', clearError));
+  init();
+})();
+</script>
+
+</body>
+</html>
