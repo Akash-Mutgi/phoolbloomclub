@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your subscription is confirmed ✿ Phool Bloom Club</title>
+<meta name="description" content="Your Phool Bloom Club subscription is confirmed. Your first envelope ships on the 1st.">
+<meta name="robots" content="noindex">
+
+<!-- Favicons (same as homepage) -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#6b4ba8; --purple-light:#ede5f8; --purple-pale:#f7f3ff; --purple-mid:#b49dd4;
+  --amber:#f6a93a; --yellow:#f7ec8d; --cream:#f5f4ed; --dark:#241820; --green-dark:#6a8a3e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--dark);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+main{max-width:640px;margin:0 auto;padding:40px 24px 56px}
+
+.ty-logo{display:block;text-align:center;margin-bottom:28px}
+.ty-logo img{height:44px;width:auto;display:inline-block}
+
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--purple-light);border:1px solid rgba(107,75,168,.22);border-radius:100px;padding:7px 16px;color:var(--purple);font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green-dark);flex-shrink:0}
+
+h1{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(2rem,5vw,2.9rem);line-height:1.18;color:var(--dark);margin:18px 0 0}
+h1 em{font-style:italic;color:var(--purple)}
+.sub{margin-top:14px;color:#5a4f6e;font-size:1.02rem}
+
+.card{margin-top:32px;background:#fff;border:1px solid #ece5f6;border-radius:20px;padding:30px 28px;box-shadow:0 8px 28px rgba(107,75,168,.07)}
+.card + .card{margin-top:18px}
+.card h2{font-family:'Playfair Display',serif;font-style:normal;font-weight:500;font-size:1.22rem;color:var(--dark);margin-bottom:8px}
+.card p{color:#5a4f6e;font-size:.96rem}
+.card p + p{margin-top:10px}
+
+.steps{list-style:none;margin-top:6px}
+.steps li{position:relative;padding-left:26px;margin-top:12px;color:#5a4f6e;font-size:.96rem}
+.steps li::before{content:'✦';position:absolute;left:0;top:0;color:var(--purple);font-size:.72rem;line-height:1.9}
+.steps strong{color:var(--dark);font-weight:600}
+
+.plan-line{display:inline-block;margin-top:14px;background:var(--purple-pale);border:1px solid rgba(107,75,168,.16);border-radius:10px;padding:8px 14px;font-size:.86rem;color:var(--purple);font-weight:500}
+
+.note{margin-top:26px;padding:16px 18px;background:rgba(107,75,168,.05);border:1px solid rgba(107,75,168,.14);border-radius:12px;font-size:.86rem;line-height:1.6;color:#6b6377}
+.note strong{color:var(--dark)}
+
+.back{display:inline-block;margin-top:30px;color:var(--purple);font-size:.9rem;text-decoration:none;border-bottom:1px solid rgba(107,75,168,.3);padding-bottom:2px}
+.back:hover{border-bottom-color:var(--purple)}
+
+footer{text-align:center;padding:34px 24px 44px;border-top:1px solid rgba(107,75,168,.1);margin-top:14px}
+footer img{height:34px;width:auto;opacity:.85}
+.footer-text{font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;color:var(--dark);margin-top:8px}
+.footer-copy{margin-top:8px;font-size:.76rem;color:#9a9099}
+
+@media(max-width:600px){
+  main{padding:28px 18px 40px}
+  .card{padding:24px 20px}
+}
+</style>
+</head>
+<body>
+
+<main>
+  <a class="ty-logo" href="/"><img src="/logo-nav.png" alt="Phool Bloom Club"></a>
+
+  <div class="pill"><span class="dot"></span>Subscription confirmed</div>
+
+  <h1 id="greeting">Welcome to the<br><em>Phool Bloom Club.</em></h1>
+
+  <p class="sub" id="sub">Your subscription is set up. Here's what happens next.</p>
+
+  <div class="plan-line" id="plan-line" hidden></div>
+
+  <div class="card">
+    <h2>Your first envelope</h2>
+    <p>Envelopes go out on the <strong>1st of every month</strong>. If you joined mid-month, yours is posted on the next 1st — not immediately, because each one is packed by hand in a single batch.</p>
+    <p>India: 3–5 days once posted. International: 10–20 days.</p>
+  </div>
+
+  <div class="card">
+    <h2>Where we'll post it</h2>
+    <p>We'll send it to the <strong>delivery address you entered at checkout</strong> — that exact address, including the postcode and phone number, is what goes on the label and what the courier uses to reach you.</p>
+    <p>Spotted a mistake, or moved? Write to <a href="mailto:hello@phoolbloomclub.com" style="color:var(--purple)">hello@phoolbloomclub.com</a> before the 25th and we'll update it for the next envelope.</p>
+  </div>
+
+  <div class="card">
+    <h2>What to expect each month</h2>
+    <ul class="steps">
+      <li>One flower of the month, running through <strong>every piece inside</strong></li>
+      <li>An A6 art print, an A7 mini print, a sticker sheet and a postcard</li>
+      <li>A handwritten letter from Avnie, and one surprise activity</li>
+      <li><strong>Cancel anytime</strong> — no lock-in. Cancel before the 25th and the following month isn't charged or shipped.</li>
+    </ul>
+  </div>
+
+  <div class="note">
+    <strong>Keep an eye on your inbox.</strong> Razorpay emails your payment receipt and mandate details directly — that email, not this page, is your record of what was charged. Check spam if it hasn't arrived shortly.
+  </div>
+
+  <a href="/" class="back">← back to phoolbloomclub.com</a>
+</main>
+
+<footer>
+  <img src="/logo-footer.png" alt="">
+  <div class="footer-text">Phool Bloom Club</div>
+  <p class="footer-copy">© 2026 Phool Bloom Club · Made with petals &amp; ink 🌸</p>
+</footer>
+
+<script>
+/* ============================================================
+   THIS PAGE IS UX ONLY — IT IS NOT PROOF OF PAYMENT.
+   Everything below comes from the query string, which is fully
+   user-controlled: anyone can open /thank-you/?plan=… directly.
+   So nothing here unlocks anything, and nothing states an amount
+   charged or that money changed hands. Razorpay's own receipt is
+   the customer's record; razorpay-webhook.js is the only source
+   of truth for fulfilment.
+============================================================ */
+(function () {
+  var params = new URLSearchParams(window.location.search);
+
+  // Same validation as /welcome/ — letters, accents, spaces, apostrophes,
+  // hyphens only, max 40 chars. Anything else is ignored rather than shown.
+  var firstName = (params.get('first_name') || '').trim();
+  if (firstName && /^[a-zA-Z\u00C0-\u017F\s'-]{1,40}$/.test(firstName)) {
+    var name = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    document.getElementById('greeting').innerHTML =
+      'Welcome, ' + name + '. <br><em>You’re in.</em>';
+  }
+
+  /* Plan label. plan= carries a Razorpay plan id, but the URL is
+     user-controlled, so an id is only shown when it matches one we
+     actually sell — and only as a plan NAME, never a price. An
+     unknown or tampered value simply shows nothing. */
+  var PLAN_NAMES = {
+    plan_T2iy8igtr4NNlA: 'Desi Phool · Monthly',
+    plan_T2j4RwqvdB20t1: 'Desi Phool · Quarterly',
+    plan_T2j5QpPcvmcciF: 'Desi Phool · Half-yearly',
+    plan_T2j7T90UVz5uvm: 'Desi Phool · Yearly',
+    plan_T2j9gFKzuMeZV0: 'Global Phool · Monthly',
+    plan_T2jAi0qikOAied: 'Global Phool · Quarterly',
+    plan_T2jDRG4X3DCqk6: 'Global Phool · Half-yearly',
+    plan_T2jFAcpX9baJIb: 'Global Phool · Yearly'
+  };
+  var planId = (params.get('plan') || '').trim();
+  if (Object.prototype.hasOwnProperty.call(PLAN_NAMES, planId)) {
+    var el = document.getElementById('plan-line');
+    el.textContent = 'Your plan: ' + PLAN_NAMES[planId];
+    el.hidden = false;
+  }
+})();
+</script>
+
+</body>
+</html>

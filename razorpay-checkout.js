@@ -1,26 +1,26 @@
 /* ============================================================
-   PHOOL BLOOM CLUB — RAZORPAY CHECKOUT WIRING
+   PHOOL BLOOM CLUB — CHECKOUT DESTINATIONS
    ============================================================
 
-   HOW TO USE
-   1. Fill in the CHECKOUT_LINKS block below. Nothing else needs editing.
-   2. Paste this whole file into a <script> tag at the end of index.html,
-      after the existing tier-selection script.
+   Decides where each Subscribe button points. It is the SINGLE owner
+   of those hrefs: index.html maintains the tier selection UI and never
+   writes an href itself, so the two cannot race.
 
-   WHERE THE VALUES COME FROM
-   Razorpay Dashboard -> Subscriptions -> open a plan -> create a
-   Subscription Link. Copy the resulting URL (looks like
-   https://rzp.io/rzp/xxxxxxx). Paste it against the matching tier.
+   Each tier points at its region's own checkout page — /checkout/desi/
+   or /checkout/global/ — which collects the delivery address and phone
+   and creates the subscription server-side via /api/create-subscription.
 
-   IMPORTANT
-   - These are SUBSCRIPTION LINK URLs, not plan_ IDs and not Payment
-     Links. Payment Links charge once and never renew.
-   - Never put your Razorpay KEY SECRET in this file. It is public.
-     Only shareable links belong here.
-   - Any tier left as an empty string keeps its current behaviour and
-     scrolls to the waitlist. Nothing breaks if you fill in some and
-     not others — you can ship the two you need today and add the
-     rest later.
+   Razorpay HOSTED links (rzp.io/...) are deliberately NOT used: they
+   cannot collect a postal address, and this is a mail business. An
+   https:// value is still accepted so a hosted link can be dropped in
+   for a one-off, but that is not the normal path.
+
+   NEVER put a Razorpay key SECRET in this file — it is served publicly.
+   The public key id lives in the checkout pages and is safe there.
+
+   Any value left empty falls that tier back to #pricing. That is the
+   safe default, and it is what the markup already says, so the buttons
+   behave sensibly even if this script never runs.
    ============================================================ */
 
 const CHECKOUT_LINKS = {
@@ -35,37 +35,29 @@ const CHECKOUT_LINKS = {
   founding_india:         '',
   founding_intl:          '',
 
-  // ---- CHECKOUT DELIBERATELY CLOSED ----------------------------------
-  // All eight values are emptied on purpose, so every tier button falls
-  // back to #pricing and no new subscription can start through these
-  // links. This is NOT an unfinished config.
+  // ---- CHECKOUT IS OPEN, VIA OUR OWN PAGES -------------------------
+  // Every tier in a card points at that region's checkout page. The page
+  // itself carries the plan chooser, collects the delivery address and
+  // phone, and creates the subscription server-side through
+  // /api/create-subscription — which is why these are our own paths and
+  // not Razorpay hosted links. A hosted rzp.io link cannot collect a
+  // postal address, and this is a mail business.
   //
-  // WHY: the rzp.io hosted subscription page cannot collect a postal
-  // address, and this is a mail business — subscribers arriving this way
-  // could not be shipped to. Those links also carried a total_count that
-  // ends the subscription after 12 months.
-  //
-  // The eight subscription links are DELIBERATELY NOT LISTED HERE: this file
-  // is served publicly, and printing them would let anyone read the source
-  // and subscribe through the very links this change is closing.
-  // Look them up in the Razorpay Dashboard under Subscriptions — six were
-  // cancelled on 2026-08-04; two are active with paying customers attached.
-  //
-  // NEXT: replaced by /checkout/desi/ and /checkout/global/, which collect
-  // the address before payment and create the subscription server-side.
+  // Leaving any value empty falls that tier back to #pricing, which is
+  // still the safe default if a path is ever mistyped.
   // --------------------------------------------------------------------
 
   // ---- DESI PHOOL / INDIA (the four tier rows) ----
-  desi_monthly:           '',   // Rs 555   / month
-  desi_seasonal:          '',   // Rs 1,499 / 3 months
-  desi_halfyear:          '',   // Rs 2,799 / 6 months
-  desi_year:              '',   // Rs 4,999 / 12 months
+  desi_monthly:           '/checkout/desi/',   // Rs 555   / month
+  desi_seasonal:          '/checkout/desi/',   // Rs 1,499 / 3 months
+  desi_halfyear:          '/checkout/desi/',   // Rs 2,799 / 6 months
+  desi_year:              '/checkout/desi/',   // Rs 4,999 / 12 months
 
   // ---- GLOBAL PHOOL / INTERNATIONAL (the four tier rows) ----
-  global_monthly:         '',   // Rs 1,100  / month
-  global_seasonal:        '',   // Rs 3,299  / 3 months
-  global_halfyear:        '',   // Rs 5,299  / 6 months
-  global_year:            '',   // Rs 10,999 / 12 months
+  global_monthly:         '/checkout/global/',   // Rs 1,100  / month
+  global_seasonal:        '/checkout/global/',   // Rs 3,299  / 3 months
+  global_halfyear:        '/checkout/global/',   // Rs 5,299  / 6 months
+  global_year:            '/checkout/global/',   // Rs 10,999 / 12 months
 };
 
 
@@ -77,7 +69,7 @@ const CHECKOUT_LINKS = {
    wrong and no subscription link should ever be created against them.
    The guard below is belt-and-braces: if a link built on one of these
    plans ever lands in CHECKOUT_LINKS, the affected button falls back
-   to the waitlist and a clear error is logged at startup.
+   to #pricing and a clear error is logged at startup.
 
    Matching is by substring, so it catches both a bare plan ID pasted
    as a value and a subscription-link URL that carries the ID inside it.
@@ -103,10 +95,9 @@ const BLOCKED_PLAN_IDS = [
 (function () {
   'use strict';
 
-  // Fallback destination for any tier with no usable link. The waitlist
-  // section no longer exists; #pricing is the live plans section, so an
-  // unconfigured button scrolls there rather than at a dead anchor.
-  var WAITLIST = '#pricing';
+  // Fallback destination for any tier with no usable link: the live plans
+  // section. The old waitlist section no longer exists.
+  var FALLBACK = '#pricing';
 
   var TAG = '[razorpay-checkout]';
 
@@ -130,19 +121,23 @@ const BLOCKED_PLAN_IDS = [
     if (!v || v === '#') return '';
 
     // Blocked plans can never produce a live destination, no matter how
-    // the value is shaped. Refuse and fall back to the waitlist.
+    // the value is shaped. Refuse and fall back to #pricing.
     var blocked = blockedMatch(v);
     if (blocked) {
       console.error(
         TAG + ' REFUSED blocked plan for "' + (key || 'unknown') + '": ' +
         blocked.id + ' (' + blocked.reason + '). ' +
-        'Button falls back to ' + WAITLIST + '.'
+        'Button falls back to ' + FALLBACK + '.'
       );
       return '';
     }
 
-    // only allow real https links — guards against a half-pasted value
-    return /^https:\/\//i.test(v) ? v : '';
+    // Accept a real https link, or a same-origin absolute path such as
+    // /checkout/desi/. The (?!\/) guard rejects protocol-relative "//host",
+    // which would silently send a buyer to another origin.
+    if (/^https:\/\//i.test(v)) return v;
+    if (/^\/(?!\/)/.test(v))    return v;
+    return '';
   }
 
   /* Startup audit — scans the whole config once and reports every
@@ -164,9 +159,9 @@ const BLOCKED_PLAN_IDS = [
         blocked.push({ key: key, id: hit.id, reason: hit.reason });
         continue;
       }
-      // Secondary check: this config takes subscription-link URLs only.
-      // A bare plan_ ID is always a mistake here, blocked or not.
-      if (/^plan_/i.test(value) || !/^https:\/\//i.test(value)) {
+      // Secondary check: a value must be an https link or a same-origin
+      // absolute path. A bare plan_ ID is always a mistake here.
+      if (/^plan_/i.test(value) || !(/^https:\/\//i.test(value) || /^\/(?!\/)/.test(value))) {
         looksLikePlanId.push({ key: key, value: value });
       }
     }
@@ -174,7 +169,7 @@ const BLOCKED_PLAN_IDS = [
     if (blocked.length) {
       console.error(
         TAG + ' ' + blocked.length + ' BLOCKED PLAN ID(S) FOUND IN CHECKOUT_LINKS. ' +
-        'These buttons will fall back to ' + WAITLIST + ' and cannot take payment. ' +
+        'These buttons will fall back to ' + FALLBACK + ' and cannot take payment. ' +
         'Remove them and use a subscription link built on a correct plan:'
       );
       blocked.forEach(function (b) {
@@ -185,8 +180,8 @@ const BLOCKED_PLAN_IDS = [
     if (looksLikePlanId.length) {
       console.error(
         TAG + ' ' + looksLikePlanId.length + ' value(s) in CHECKOUT_LINKS are not ' +
-        'https:// subscription links. This config takes subscription-link URLs ' +
-        '(https://rzp.io/...) only — plan IDs do not work here. Affected: ' +
+        'a usable destination. This config takes an https URL ' +
+        '(https://...) or a same-origin path (/checkout/...). Affected: ' +
         looksLikePlanId.map(function (p) { return p.key; }).join(', ')
       );
     }
@@ -194,7 +189,7 @@ const BLOCKED_PLAN_IDS = [
 
   function apply(anchor, url) {
     if (!anchor) return;
-    var next = url || WAITLIST;
+    var next = url || FALLBACK;
 
     // Write only on an actual change. Both the click listener and the
     // MutationObserver call syncCard for the same selection, so an
@@ -265,8 +260,8 @@ const BLOCKED_PLAN_IDS = [
   function init() {
     // Audit first so the warning is visible even if wiring later fails.
     try { auditConfig(); }  catch (e) { /* never block wiring on the audit */ }
-    try { wireFounding(); } catch (e) { /* leave waitlist fallback intact */ }
-    try { wireTiers(); }    catch (e) { /* leave waitlist fallback intact */ }
+    try { wireFounding(); } catch (e) { /* leave the #pricing fallback intact */ }
+    try { wireTiers(); }    catch (e) { /* leave the #pricing fallback intact */ }
   }
 
   if (document.readyState === 'loading') {

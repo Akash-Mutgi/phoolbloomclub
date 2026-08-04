@@ -200,14 +200,7 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
    The Key ID below is the PUBLIC Razorpay key — safe to expose.
 ============================================================ */
 (function () {
-  // ===================================================================
-  // TODO — LAST OUTSTANDING EDIT BEFORE THIS PAGE CAN BE DEPLOYED
-  // This key id is STALE. It predates a key rotation and will make
-  // checkout fail. Replace it with the CURRENT public key id from the
-  // Razorpay Dashboard (Account & Settings -> API Keys) once the secret
-  // has been rotated. Do not deploy /checkout/ until this is done.
-  // ===================================================================
-  const RAZORPAY_KEY_ID = 'rzp_live_T2kcFfTUglndi2'; // STALE — see TODO above
+  const RAZORPAY_KEY_ID = 'rzp_live_TLe5DemKoljncS'; // public key id only — safe client-side
   const REGION = 'global';
 
   // NOTE: `tier` is the pricing tier (regular vs founding), NOT a plan
