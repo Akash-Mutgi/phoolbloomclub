@@ -324,7 +324,24 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
       wrap.querySelector('input').addEventListener('change', () => selectPlan(p.id));
       plansEl.appendChild(wrap);
     });
-    if (list.length) selectPlan(list[0].id);
+    if (list.length) selectPlan(requestedPlanId(list) || list[0].id);
+  }
+
+  /* A plan id may arrive as ?plan=... from the homepage tier selector, so a
+     visitor who picked "Yearly" there does not land on "Monthly" here.
+     The query string is USER-CONTROLLED, so it is honoured only when it
+     matches a plan this page actually sells. Anything else — an unknown id,
+     junk, a blocklisted plan, or a valid plan from the other region — falls
+     back to the first plan rather than erroring. Same treatment as
+     /thank-you/ gives its params. */
+  function requestedPlanId(list){
+    var q;
+    try { q = new URLSearchParams(window.location.search).get('plan'); }
+    catch (e) { return null; }
+    if (!q) return null;
+    q = q.trim();
+    for (var i = 0; i < list.length; i++) if (list[i].id === q) return q;
+    return null;
   }
 
   function selectPlan(id){

@@ -36,28 +36,31 @@ const CHECKOUT_LINKS = {
   founding_intl:          '',
 
   // ---- CHECKOUT IS OPEN, VIA OUR OWN PAGES -------------------------
-  // Every tier in a card points at that region's checkout page. The page
-  // itself carries the plan chooser, collects the delivery address and
-  // phone, and creates the subscription server-side through
-  // /api/create-subscription — which is why these are our own paths and
-  // not Razorpay hosted links. A hosted rzp.io link cannot collect a
+  // Every tier points at its region's checkout page, carrying its plan id
+  // so the tier chosen here is preselected there. The checkout page collects
+  // the delivery address and phone and creates the subscription server-side
+  // through /api/create-subscription — which is why these are our own paths
+  // and not Razorpay hosted links. A hosted rzp.io link cannot collect a
   // postal address, and this is a mail business.
+  //
+  // The ?plan= value is validated against the plans that page sells; an
+  // unrecognised id falls back to Monthly rather than erroring.
   //
   // Leaving any value empty falls that tier back to #pricing, which is
   // still the safe default if a path is ever mistyped.
   // --------------------------------------------------------------------
 
   // ---- DESI PHOOL / INDIA (the four tier rows) ----
-  desi_monthly:           '/checkout/desi/',   // Rs 555   / month
-  desi_seasonal:          '/checkout/desi/',   // Rs 1,499 / 3 months
-  desi_halfyear:          '/checkout/desi/',   // Rs 2,799 / 6 months
-  desi_year:              '/checkout/desi/',   // Rs 4,999 / 12 months
+  desi_monthly:           '/checkout/desi/?plan=plan_T2iy8igtr4NNlA',   // Rs 555   / month
+  desi_seasonal:          '/checkout/desi/?plan=plan_T2j4RwqvdB20t1',   // Rs 1,499 / 3 months
+  desi_halfyear:          '/checkout/desi/?plan=plan_T2j5QpPcvmcciF',   // Rs 2,799 / 6 months
+  desi_year:              '/checkout/desi/?plan=plan_T2j7T90UVz5uvm',   // Rs 4,999 / 12 months
 
   // ---- GLOBAL PHOOL / INTERNATIONAL (the four tier rows) ----
-  global_monthly:         '/checkout/global/',   // Rs 1,100  / month
-  global_seasonal:        '/checkout/global/',   // Rs 3,299  / 3 months
-  global_halfyear:        '/checkout/global/',   // Rs 5,299  / 6 months
-  global_year:            '/checkout/global/',   // Rs 10,999 / 12 months
+  global_monthly:         '/checkout/global/?plan=plan_T2j9gFKzuMeZV0',   // Rs 1,100  / month
+  global_seasonal:        '/checkout/global/?plan=plan_T2jAi0qikOAied',   // Rs 3,299  / 3 months
+  global_halfyear:        '/checkout/global/?plan=plan_T2jDRG4X3DCqk6',   // Rs 5,299  / 6 months
+  global_year:            '/checkout/global/?plan=plan_T2jFAcpX9baJIb',   // Rs 10,999 / 12 months
 };
 
 
