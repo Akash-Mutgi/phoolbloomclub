@@ -85,13 +85,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,244,237,
   width:100%;text-align:left;
   background:#fdfbf7;border:none;border-radius:0;box-shadow:none;
   overflow:hidden;display:grid;
-  grid-template-columns:minmax(300px,38%) 1fr;
+  /* Cap the media column near the photo's own width at this row height
+     (900x1300 at ~620px tall is ~429px wide). Without the cap, 38% of a wide
+     desktop leaves the contained photo stranded in 300px of lavender. */
+  grid-template-columns:minmax(300px,min(38%,460px)) 1fr;
   align-items:stretch;
 }
 .unwrap-media{position:relative;min-height:min(78vh,620px);background:var(--purple-light);align-self:stretch}
+/* contain, not cover: the photo is a 900x1300 flat-lay of the whole envelope
+   and every item in it is the point, so cropping to fill the column cut the
+   sticker sheet and postcard off the bottom. Contain shows all of it and lets
+   the lavender show at the sides instead. */
 .unwrap-media img{
   position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center 42%;display:block;
+  object-fit:contain;object-position:center;display:block;
 }
 .unwrap-content{
   display:flex;flex-direction:column;justify-content:center;gap:40px;
@@ -134,12 +141,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,244,237,
 
 @media(max-width:900px){
   .unwrap-panel{grid-template-columns:1fr}
-  .unwrap-media{min-height:340px}
+  /* Single column, so the media band is as wide as the screen. A fixed height
+     plus contain would float the tall photo in a broad lavender field, so drop
+     the height and let the image set it: the picture fills the width, the box
+     hugs the picture, and 72vh stops it eating a whole phone screen. */
+  .unwrap-media{min-height:0;width:fit-content;max-width:100%;margin-inline:auto}
+  .unwrap-media img{
+    position:static;width:auto;max-width:100%;height:auto;max-height:72vh;
+    margin-inline:auto;
+  }
   .unwrap-content{padding:36px 32px 32px;gap:32px}
   .unwrap-grid{align-content:start}
 }
 @media(max-width:600px){
-  .unwrap-media{min-height:260px}
+  .unwrap-media{min-height:0}
   .unwrap-content{padding:28px 24px;gap:24px}
   .unwrap-heading{font-size:26px}
   .unwrap-grid{grid-template-columns:1fr;gap:20px}
