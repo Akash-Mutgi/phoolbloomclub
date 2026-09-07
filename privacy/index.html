@@ -18,9 +18,12 @@
 <link rel="shortcut icon" href="/favicon.ico">
 <link rel="manifest" href="/site.webmanifest">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600&display=swap" rel="stylesheet">
+<!-- Fonts are self-hosted (see /fonts.css). Nothing here may point at
+     Google's font CDN: that would leak every visitor's IP to Google on
+     page load, which /privacy/ states does not happen. -->
+<link rel="preload" href="/fonts/playfair-display-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts.css">
 <style>
 :root{
   --purple:#6b4ba8; --purple-light:#ede5f8; --purple-pale:#f7f3ff; --purple-mid:#b49dd4;
@@ -164,9 +167,9 @@ footer img{height:34px;width:auto;opacity:.85}
     <h2>Other things this site loads</h2>
     <p>Being straight with you about the rest of it:</p>
     <ul class="steps">
-      <li><strong>Fonts.</strong> Our typefaces are served by Google Fonts, on every page. That
-        means Google receives your IP address when a page loads, before any consent banner is
-        involved. It is used to deliver the font files.</li>
+      <li><strong>Fonts.</strong> Our typefaces are served from this site itself. They used to
+        come from Google Fonts, which meant Google saw your IP address on every page load; they
+        are now self-hosted, so loading a page sends nothing to Google.</li>
       <li><strong>Razorpay's checkout script.</strong> On the two checkout pages, Razorpay's
         payment script loads with the page so the payment window can open. It may set its own
         cookies as part of processing a payment — that is Razorpay's, not analytics, and it is
