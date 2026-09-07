@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google tag (gtag.js) — GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EK1XCDZWTH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EK1XCDZWTH');
+</script>
 <title>Checkout · Global Phool — Phool Bloom Club ✿</title>
 <meta name="description" content="Subscribe to the Global Phool plan — one handmade envelope of flowers, every month, delivered worldwide.">
 
@@ -384,6 +393,16 @@ footer{background:var(--dark);padding:30px 24px;text-align:center}
     loadingEl.remove();
     renderPlans(REGULAR_PLANS.slice());
     form.hidden = false;
+
+    /* Top of the funnel: the form is now on screen. Pairs with the
+       `purchase` event on /thank-you/ to give the drop-off between
+       reaching checkout and completing payment. No value here either —
+       nothing is owed until Razorpay charges. */
+    gtag('event', 'begin_checkout', {
+      items: REGULAR_PLANS.map(function (p) {
+        return { item_id: p.id, item_name: 'Global Phool · ' + p.name };
+      })
+    });
   }
 
   form.addEventListener('submit', async function (e) {
