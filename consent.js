@@ -81,6 +81,7 @@
     '.pb-consent-inner{max-width:940px;margin:0 auto;display:flex;flex-wrap:wrap;',
       'align-items:center;gap:12px 18px}',
     '.pb-consent-text{flex:1 1 320px;margin:0;min-width:0}',
+    '.pb-consent-text a{color:#6b4ba8;text-decoration:underline}',
     '.pb-consent-actions{display:flex;gap:10px;flex-shrink:0}',
     /* Both buttons share every dimension, border and weight. The only
        difference is fill, so neither is visually the "safe" default. */
@@ -116,7 +117,8 @@
       '<div class="pb-consent-inner">' +
         '<p class="pb-consent-text">We’d like to use Google Analytics to see how people ' +
         'find the Club. It sets cookies, so it only runs if you say yes — ' +
-        'nothing is loaded until you choose.</p>' +
+        'nothing is loaded until you choose. ' +
+        '<a href="/privacy/">What we collect</a>.</p>' +
         '<div class="pb-consent-actions">' +
           '<button type="button" class="pb-consent-btn pb-consent-decline">Decline</button>' +
           '<button type="button" class="pb-consent-btn pb-consent-accept">Accept</button>' +
