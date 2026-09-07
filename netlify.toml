@@ -59,9 +59,25 @@
     Cache-Control = "public, max-age=0, must-revalidate"
 
 # Directory indexes are requested as "/welcome/", a path that does not end
-# in .html, so the rule above does not match them. Listed explicitly.
+# in .html, so the rule above does not match them. Every such index has to be
+# listed explicitly — there are four.
 [[headers]]
   for = "/welcome/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/thank-you/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/checkout/desi/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/checkout/global/"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
 
@@ -72,5 +88,13 @@
 # already holds — bump that version whenever this file's behaviour changes.
 [[headers]]
   for = "/razorpay-checkout.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# consent.js decides whether GA4 is loaded at all. A stale copy would mean a
+# visitor's stored choice is read by outdated logic, so it must revalidate on
+# every request rather than sit in a CDN cache.
+[[headers]]
+  for = "/consent.js"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"

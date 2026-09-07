@@ -4,14 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Google tag (gtag.js) — GA4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EK1XCDZWTH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-EK1XCDZWTH');
-</script>
+<!-- GA4 (G-EK1XCDZWTH) is loaded by consent.js, and only after the
+     visitor accepts. Do not add a gtag.js tag directly to this page. -->
+<script src="/consent.js"></script>
 <title>Your subscription is confirmed ✿ Phool Bloom Club</title>
 <meta name="description" content="Your Phool Bloom Club subscription is confirmed. Your first envelope ships on the 1st.">
 <meta name="robots" content="noindex">
@@ -172,9 +167,14 @@ footer img{height:34px;width:auto;opacity:.85}
        anyone could inflate by editing the URL. razorpay-webhook.js stays
        the only source of truth for revenue. Gated by the same
        PLAN_NAMES check above, so a junk plan= sends nothing at all. */
-    gtag('event', 'purchase', {
-      items: [{ item_id: planId, item_name: PLAN_NAMES[planId] }]
-    });
+    /* typeof-guarded: if consent.js is blocked (ad blocker, network
+       failure) gtag is simply undefined, and analytics must never be
+       able to throw inside page logic. */
+    if (typeof gtag === 'function') {
+      gtag('event', 'purchase', {
+        items: [{ item_id: planId, item_name: PLAN_NAMES[planId] }]
+      });
+    }
   }
 })();
 </script>
