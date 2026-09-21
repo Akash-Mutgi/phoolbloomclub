@@ -82,11 +82,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,244,237,
 .section-header p{max-width:480px;margin:0 auto;color:#5a4f6e;font-size:.97rem}
 
 /* ══ TICKER ══ */
-.ticker-wrap{background:var(--purple);padding:10px 0;overflow:hidden;white-space:nowrap}
-.ticker-inner{display:inline-flex;animation:tick 32s linear infinite}
-.ticker-inner span{font-family:'Playfair Display',serif;font-style:italic;font-size:0.88rem;color:rgba(255,255,255,.9);padding:0 28px}
-.ticker-inner .td{color:var(--yellow);font-size:0.6rem;vertical-align:middle;padding:0 2px}
-@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ══ UNWRAP QUIET MOMENTS (Figma: Desktop-B-Overlay-Split 1:644) ══ */
 .unwrap-section{padding:68px 0 0;background:var(--cream);position:relative}
@@ -99,6 +94,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(245,244,237,
      desktop leaves the contained photo stranded in 300px of lavender. */
   grid-template-columns:minmax(300px,min(38%,460px)) 1fr;
   align-items:stretch;
+  /* On wide screens the photo sat pinned to the left edge with the text
+     centred far away in the remaining width. Pad both sides equally so the
+     photo and text stay together as one centred 1320px block, while the
+     panel background still runs full-bleed. Below 1320px this is 0. */
+  padding-inline:max(0px,calc((100% - 1320px) / 2));
 }
 .unwrap-media{position:relative;min-height:min(78vh,620px);background:var(--purple-light);align-self:stretch}
 /* contain, not cover: the photo is a 900x1300 flat-lay of the whole envelope
@@ -530,25 +530,6 @@ footer{background:var(--dark);padding:48px 32px 28px;text-align:center}
     </div>
 </section>
 
-<!-- ══ TICKER ══ -->
-<div class="ticker-wrap">
-  <div class="ticker-inner">
-    <span>Subscriptions open now</span><span class="td">◆</span>
-    <span>Ships on the 1st of every month</span><span class="td">◆</span>
-    <span>One flower. One emotion. One handmade envelope</span><span class="td">◆</span>
-    <span>Original art illustrated by hand, every month</span><span class="td">◆</span>
-    <span>Cancel anytime</span><span class="td">◆</span>
-    <span>India ₹555 · International ₹1100</span><span class="td">◆</span>
-    <span>Handmade in Pune, sent worldwide</span><span class="td">◆</span>
-    <span>Subscriptions open now</span><span class="td">◆</span>
-    <span>Ships on the 1st of every month</span><span class="td">◆</span>
-    <span>One flower. One emotion. One handmade envelope</span><span class="td">◆</span>
-    <span>Original art illustrated by hand, every month</span><span class="td">◆</span>
-    <span>Cancel anytime</span><span class="td">◆</span>
-    <span>India ₹555 · International ₹1100</span><span class="td">◆</span>
-    <span>Handmade in Pune, sent worldwide</span><span class="td">◆</span>
-  </div>
-</div>
 
 <!-- ═══ EVERYTHING IN YOUR ENVELOPE ═══ -->
 <section class="envelope-section" id="envelope">
